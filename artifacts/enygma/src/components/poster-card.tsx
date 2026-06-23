@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Play, Heart, Star } from "lucide-react";
 import type { Movie, Series } from "@workspace/api-client-react";
 import { useFavorites } from "@/lib/use-favorites";
+import { prefetchItemDetail } from "@/lib/prefetch-detail";
 
 interface PosterCardProps {
   item: Movie | Series;
@@ -117,6 +118,7 @@ export function PosterCard({ item, rank, type, variant = "portrait", eager = fal
         onMouseEnter={e => {
           e.currentTarget.style.transform = "scale(1.06)";
           e.currentTarget.style.boxShadow = "0 20px 40px rgba(123,47,190,0.4)";
+          prefetchItemDetail(item.id, type);
         }}
         onMouseLeave={e => {
           e.currentTarget.style.transform = "scale(1)";

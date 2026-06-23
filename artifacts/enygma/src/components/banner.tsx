@@ -12,6 +12,7 @@ export function Banner({ items }: BannerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [fading, setFading] = useState(false);
+  const [backdropLoaded, setBackdropLoaded] = useState(false);
   const [, setLocation] = useLocation();
   const transitionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -24,6 +25,10 @@ export function Banner({ items }: BannerProps) {
   });
 
   const logoSrc = displayItem?.logoUrl || tmdb?.logoPath || null;
+  
+  // Optimized backdrop with blur-up effect
+  const backdropUrl = displayItem?.backdropUrl || tmdb?.backdropPath;
+  const blurHash = "L84d6Q"; // Simple CSS gradient blur effect
 
   const resetTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);

@@ -41,16 +41,16 @@ export default function Home() {
   );
 
   const { data: moviesData } = useListMovies(
-    { limit: 500, profile: profile || undefined },
-    { query: { staleTime: 5 * 60 * 1000 } },
+    { limit: 50, profile: profile || undefined },
+    { query: { staleTime: 5 * 60 * 1000, gcTime: 10 * 60 * 1000 } },
   );
   const { data: seriesData } = useListSeries(
-    { limit: 100, profile: profile || undefined },
-    { query: { staleTime: 5 * 60 * 1000 } },
+    { limit: 40, profile: profile || undefined },
+    { query: { staleTime: 5 * 60 * 1000, gcTime: 10 * 60 * 1000 } },
   );
   const { data: animeData } = useListAnime(
-    { limit: 100, profile: profile || undefined },
-    { query: { staleTime: 5 * 60 * 1000 } },
+    { limit: 40, profile: profile || undefined },
+    { query: { staleTime: 5 * 60 * 1000, gcTime: 10 * 60 * 1000 } },
   );
 
   const allMovies = moviesData?.items || [];
