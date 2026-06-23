@@ -1,0 +1,116 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          ENYGMA — CÓMO LEVANTAR                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+La app tiene DOS servicios que corren al mismo tiempo:
+  1. API Server   → Express.js  (puerto 8080)
+  2. Frontend     → React + Vite (puerto 3000)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ REQUISITOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Node.js 20+  →  https://nodejs.org
+  pnpm 9+      →  npm install -g pnpm
+
+  Verificar:
+    node -v   (v20.x o mayor)
+    pnpm -v   (v9.x o mayor)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PASO 1 — INSTALAR DEPENDENCIAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  En la raíz del proyecto (donde está este archivo):
+
+    pnpm install --no-frozen-lockfile
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PASO 2 — LEVANTAR LA API (Terminal 1)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Mac / Linux:
+    PORT=8080 pnpm --filter @workspace/api-server run dev
+
+  Windows (PowerShell):
+    $env:PORT="8080"; pnpm --filter @workspace/api-server run dev
+
+  Windows (CMD):
+    set PORT=8080 && pnpm --filter @workspace/api-server run dev
+
+  → Esperá hasta ver:  "Server listening"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PASO 3 — LEVANTAR EL FRONTEND (Terminal 2)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Mac / Linux:
+    PORT=3000 pnpm --filter @workspace/enygma run dev:local
+
+  Windows (PowerShell):
+    $env:PORT="3000"; pnpm --filter @workspace/enygma run dev:local
+
+  Windows (CMD):
+    set PORT=3000 && pnpm --filter @workspace/enygma run dev:local
+
+  → Esperá hasta ver:  "Local: http://localhost:3000"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PASO 4 — ABRIR EN EL BROWSER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  http://localhost:3000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ SCRIPTS RÁPIDOS (Mac/Linux)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Terminal 1:  ./iniciar-api.sh
+  Terminal 2:  ./iniciar-frontend.sh
+
+  Si dice permiso denegado:
+    chmod +x iniciar-api.sh iniciar-frontend.sh
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ESTRUCTURA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  artifacts/api-server/   → API Express (fuente: src/)
+  artifacts/enygma/       → Frontend React+Vite (fuente: src/)
+  lib/                    → Librerías compartidas
+  levantar.txt            → Este archivo
+  iniciar-api.sh          → Script API (Mac/Linux)
+  iniciar-frontend.sh     → Script frontend (Mac/Linux)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ VARIABLES DE ENTORNO (todas opcionales)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  El proyecto funciona sin configuración extra.
+  
+  API (artifacts/api-server/.env):
+    PORT=8080
+    TMDB_API_KEY=tu_clave   ← ya tiene una por defecto
+
+  Frontend (artifacts/enygma/.env):
+    PORT=3000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PROBLEMAS COMUNES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✗ "PORT environment variable is required"
+    → Asegurate de pasar PORT= antes del comando
+
+  ✗ Error de módulos no encontrados
+    → Borrar node_modules y reinstalar:
+      find . -name "node_modules" -type d -prune -exec rm -rf {} +
+      pnpm install --no-frozen-lockfile
+
+  ✗ La app carga pero sin contenido
+    → El API server tiene que estar corriendo en puerto 8080
+
+  ✗ Videos no cargan
+    → Las fuentes de los streams son externas, pueden estar caídas
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

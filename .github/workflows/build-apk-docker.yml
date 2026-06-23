@@ -1,0 +1,63 @@
+name: Build APK with Docker
+
+on:
+  push:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies and build
+        run: |
+          npm ci --legacy-peer-deps
+          npm run build
+      
+      - name: Build APK with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.0
+      
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+      
+      - name: Create Android project
+        run: |
+          cd artifacts/enygma
+          npm install -g @capacitor/cli @capacitor/core @capacitor/android
+          npx cap add android || true
+          npx cap sync android
+      
+      - name: Build APK
+        run: |
+          cd artifacts/enygma/android
+          chmod +x gradlew
+          ./gradlew assembleRelease 2>&1 | tail -50
+        continue-on-error: true
+      
+      - name: Check for APK
+        run: find artifacts/enygma/android -name "*.apk" -exec ls -lh {} \;
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: app-apk
+          path: artifacts/enygma/android/app/build/outputs/apk/**/*.apk
+          if-no-files-found: ignore
+      
+      - name: Notify
+        if: always()
+        run: echo "Build completed. Check artifacts for APK."

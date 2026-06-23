@@ -1,0 +1,790 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: ENYGMA Streaming API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: content
+    description: Streaming content
+  - name: profiles
+    description: User profiles
+  - name: tmdb
+    description: TMDB enrichment
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /profiles:
+    get:
+      operationId: listProfiles
+      tags: [profiles]
+      summary: List available profiles
+      responses:
+        "200":
+          description: List of profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Profile"
+
+  /content/movies:
+    get:
+      operationId: listMovies
+      tags: [content]
+      summary: List movies
+      parameters:
+        - name: profile
+          in: query
+          schema:
+            type: string
+            enum: [senor, senora, kids]
+        - name: section
+          in: query
+          schema:
+            type: string
+            enum: [all, banner, top10, trending, latest, recommended]
+        - name: genre
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: List of movies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieListResponse"
+
+  /content/movies/{id}:
+    get:
+      operationId: getMovie
+      tags: [content]
+      summary: Get movie detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Movie detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "404":
+          description: Not found
+
+  /content/series:
+    get:
+      operationId: listSeries
+      tags: [content]
+      summary: List series
+      parameters:
+        - name: profile
+          in: query
+          schema:
+            type: string
+            enum: [senor, senora, kids]
+        - name: section
+          in: query
+          schema:
+            type: string
+            enum: [all, latest, trending, recommended]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: List of series
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeriesListResponse"
+
+  /content/series/{id}:
+    get:
+      operationId: getSeriesDetail
+      tags: [content]
+      summary: Get series with episodes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Series with episodes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeriesDetail"
+        "404":
+          description: Not found
+
+  /content/anime:
+    get:
+      operationId: listAnime
+      tags: [content]
+      summary: List anime
+      parameters:
+        - name: profile
+          in: query
+          schema:
+            type: string
+            enum: [senor, senora, kids]
+        - name: section
+          in: query
+          schema:
+            type: string
+            enum: [all, latest, trending, recommended]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: List of anime
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimeListResponse"
+
+  /content/anime/{id}:
+    get:
+      operationId: getAnimeDetail
+      tags: [content]
+      summary: Get anime detail with episodes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Anime with episodes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeriesDetail"
+        "404":
+          description: Not found
+
+  /content/home:
+    get:
+      operationId: getHomeContent
+      tags: [content]
+      summary: Get home page sections (banner, top10, trending, recommended, latest)
+      parameters:
+        - name: profile
+          in: query
+          schema:
+            type: string
+            enum: [senor, senora, kids]
+      responses:
+        "200":
+          description: Home content sections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HomeContent"
+
+  /content/search:
+    get:
+      operationId: searchContent
+      tags: [content]
+      summary: Search across all content
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: profile
+          in: query
+          schema:
+            type: string
+            enum: [senor, senora, kids]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 30
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResults"
+
+  /resolve:
+    get:
+      operationId: resolveVideo
+      tags: [content]
+      summary: Resolve a streaming embed URL to a direct HLS stream
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Resolved video info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResolvedVideo"
+        "404":
+          description: Could not extract video URL
+        "400":
+          description: Missing or invalid url param
+
+  /tmdb/person:
+    get:
+      operationId: getTmdbPerson
+      tags: [tmdb]
+      summary: Get TMDB person biography and credits
+      parameters:
+        - name: personId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Person details with credits
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TmdbPerson"
+        "404":
+          description: Not found
+
+  /tmdb/details:
+    get:
+      operationId: getTmdbDetails
+      tags: [tmdb]
+      summary: Get TMDB enriched details for a title
+      parameters:
+        - name: tmdbId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [movie, tv]
+            default: movie
+      responses:
+        "200":
+          description: TMDB details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TmdbDetails"
+        "404":
+          description: Not found
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+
+    Profile:
+      type: object
+      required: [id, name, avatar, isKids]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        avatar:
+          type: string
+        isKids:
+          type: boolean
+
+    Movie:
+      type: object
+      required: [id, titulo]
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        sinopsis:
+          type: ["string", "null"]
+        posterUrl:
+          type: ["string", "null"]
+        backdropUrl:
+          type: ["string", "null"]
+        logoUrl:
+          type: ["string", "null"]
+        urlReproduccion:
+          type: ["string", "null"]
+        youtubeTrailer:
+          type: ["string", "null"]
+        genero:
+          type: ["string", "null"]
+        año:
+          type: ["string", "null"]
+        actores:
+          type: ["string", "null"]
+        vistas:
+          type: ["string", "null"]
+        esVip:
+          type: boolean
+        enBanner:
+          type: boolean
+        tipo:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+        valoracion:
+          type: ["string", "null"]
+        categoria:
+          type: string
+          enum: [movie, serie, anime]
+
+    MovieListResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movie"
+        total:
+          type: integer
+
+    Series:
+      type: object
+      required: [id, titulo, categoria]
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        sinopsis:
+          type: ["string", "null"]
+        posterUrl:
+          type: ["string", "null"]
+        backdropUrl:
+          type: ["string", "null"]
+        logoUrl:
+          type: ["string", "null"]
+        youtubeTrailer:
+          type: ["string", "null"]
+        genero:
+          type: ["string", "null"]
+        año:
+          type: ["string", "null"]
+        visible:
+          type: boolean
+        totalSeasons:
+          type: integer
+        totalEpisodes:
+          type: integer
+        categoria:
+          type: string
+          enum: [movie, serie, anime]
+
+    Episode:
+      type: object
+      required: [serieId, temporada, episodio, tituloEpisodio]
+      properties:
+        serieId:
+          type: string
+        temporada:
+          type: ["string", "null"]
+        episodio:
+          type: ["string", "null"]
+        tituloEpisodio:
+          type: string
+        urlReproduccion:
+          type: ["string", "null"]
+        urlReproduccion2:
+          type: ["string", "null"]
+
+    SeriesDetail:
+      type: object
+      required: [series, episodes]
+      properties:
+        series:
+          $ref: "#/components/schemas/Series"
+        episodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Episode"
+        seasons:
+          type: array
+          items:
+            type: integer
+
+    SeriesListResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Series"
+        total:
+          type: integer
+
+    AnimeListResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Series"
+        total:
+          type: integer
+
+    HomeContent:
+      type: object
+      required: [banner, top10, trending, recommended, latestMovies, latestSeries, latestAnime]
+      properties:
+        banner:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movie"
+        top10:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movie"
+        trending:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movie"
+        recommended:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movie"
+        latestMovies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movie"
+        latestSeries:
+          type: array
+          items:
+            $ref: "#/components/schemas/Series"
+        latestAnime:
+          type: array
+          items:
+            $ref: "#/components/schemas/Series"
+
+    SearchResult:
+      type: object
+      required: [id, titulo, categoria]
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        posterUrl:
+          type: ["string", "null"]
+        genero:
+          type: ["string", "null"]
+        año:
+          type: ["string", "null"]
+        categoria:
+          type: string
+          enum: [movie, serie, anime]
+
+    SearchResults:
+      type: object
+      required: [movies, series, anime, total]
+      properties:
+        movies:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchResult"
+        series:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchResult"
+        anime:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchResult"
+        total:
+          type: integer
+
+    VideoTrack:
+      type: object
+      required: [file, label, kind]
+      properties:
+        file:
+          type: string
+        label:
+          type: string
+        kind:
+          type: string
+        default:
+          type: boolean
+
+    ResolvedVideo:
+      type: object
+      required: [hlsUrl, tracks]
+      properties:
+        hlsUrl:
+          type: string
+        tracks:
+          type: array
+          items:
+            $ref: "#/components/schemas/VideoTrack"
+
+    TmdbPerson:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        biography:
+          type: ["string", "null"]
+        birthday:
+          type: ["string", "null"]
+        placeOfBirth:
+          type: ["string", "null"]
+        profilePath:
+          type: ["string", "null"]
+        knownFor:
+          type: ["string", "null"]
+        credits:
+          type: array
+          items:
+            $ref: "#/components/schemas/TmdbPersonCredit"
+
+    TmdbPersonCredit:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        posterPath:
+          type: ["string", "null"]
+        year:
+          type: ["string", "null"]
+        mediaType:
+          type: string
+        character:
+          type: ["string", "null"]
+        voteAverage:
+          type: ["number", "null"]
+
+    TmdbCast:
+      type: object
+      required: [name]
+      properties:
+        personId:
+          type: ["integer", "null"]
+        name:
+          type: string
+        character:
+          type: ["string", "null"]
+        profilePath:
+          type: ["string", "null"]
+
+    TmdbVideo:
+      type: object
+      required: [key, site, type]
+      properties:
+        key:
+          type: string
+        site:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+
+    TmdbRecommendation:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        posterPath:
+          type: ["string", "null"]
+        overview:
+          type: ["string", "null"]
+        voteAverage:
+          type: ["number", "null"]
+
+    TmdbWatchProvider:
+      type: object
+      required: [providerId, name]
+      properties:
+        providerId:
+          type: integer
+        name:
+          type: string
+        logoPath:
+          type: ["string", "null"]
+
+    TmdbNetwork:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        logoPath:
+          type: ["string", "null"]
+
+    TmdbDetails:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        overview:
+          type: ["string", "null"]
+        posterPath:
+          type: ["string", "null"]
+        backdropPath:
+          type: ["string", "null"]
+        logoPath:
+          type: ["string", "null"]
+        releaseDate:
+          type: ["string", "null"]
+        voteAverage:
+          type: ["number", "null"]
+        voteCount:
+          type: ["integer", "null"]
+        genres:
+          type: array
+          items:
+            type: string
+        runtime:
+          type: ["integer", "null"]
+        director:
+          type: ["string", "null"]
+        writers:
+          type: array
+          items:
+            type: string
+        spokenLanguages:
+          type: array
+          items:
+            type: string
+        originalLanguage:
+          type: ["string", "null"]
+        tagline:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+        budget:
+          type: ["number", "null"]
+        revenue:
+          type: ["number", "null"]
+        productionCountries:
+          type: array
+          items:
+            type: string
+        imdbId:
+          type: ["string", "null"]
+        contentRating:
+          type: ["string", "null"]
+        numberOfSeasons:
+          type: ["integer", "null"]
+        numberOfEpisodes:
+          type: ["integer", "null"]
+        createdBy:
+          type: array
+          items:
+            type: string
+        networks:
+          type: array
+          items:
+            $ref: "#/components/schemas/TmdbNetwork"
+        cast:
+          type: array
+          items:
+            $ref: "#/components/schemas/TmdbCast"
+        videos:
+          type: array
+          items:
+            $ref: "#/components/schemas/TmdbVideo"
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/TmdbRecommendation"
+        watchProviders:
+          type: array
+          items:
+            $ref: "#/components/schemas/TmdbWatchProvider"

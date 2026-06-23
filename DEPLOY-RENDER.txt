@@ -1,0 +1,115 @@
+============================================================
+  ENYGMA - GUÍA COMPLETA PARA DEPLOY EN RENDER.COM
+============================================================
+
+REQUISITOS PREVIOS:
+- Cuenta en GitHub: github.com
+- Cuenta en Render: render.com (gratis, registrate con GitHub)
+
+------------------------------------------------------------
+PASO 1 - SUBIR EL CÓDIGO A GITHUB
+------------------------------------------------------------
+
+1. Entrá a github.com y creá un repositorio nuevo:
+   - Nombre: enygma (o el que quieras)
+   - Privado: SI
+   - No agregues README ni .gitignore
+
+2. Copiá la URL del repo (ejemplo):
+   https://github.com/MrDeepGenius/AppEnygmacinehd.git
+
+3. En la terminal de tu editor (Kiro, VS Code, etc.) ejecutá:
+
+   git init
+   git add .
+   git commit -m "ENYGMA app"
+   git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
+   git push -u origin main
+
+   (Reemplazá TU_USUARIO y TU_REPO con los tuyos)
+
+------------------------------------------------------------
+PASO 2 - CREAR EL SERVICIO EN RENDER
+------------------------------------------------------------
+
+1. Entrá a render.com
+2. Click en "New +" → "Web Service"
+3. Conectá tu cuenta de GitHub
+4. Seleccioná el repositorio que subiste
+5. Render detecta el archivo render.yaml automáticamente
+
+SI RENDER NO DETECTA EL YAML, configurá manualmente:
+
+   Name:          enygma
+   Region:        Oregon (US West)
+   Branch:        main
+   Runtime:       Node
+
+   Build Command:
+   npm install -g pnpm@10.26.1 && pnpm install --frozen-lockfile && pnpm --filter @workspace/enygma run build && pnpm --filter @workspace/api-server run build
+
+   Start Command:
+   node --enable-source-maps artifacts/api-server/dist/index.mjs
+
+------------------------------------------------------------
+PASO 3 - VARIABLES DE ENTORNO (MUY IMPORTANTE)
+------------------------------------------------------------
+
+En Render, sección "Environment", agregá estas 3 variables:
+
+   PORT            = 10000
+   NODE_ENV        = production
+   TMDB_API_KEY    = b9b334be32f57187296a06cfed4f2821
+
+SIN ESTAS VARIABLES LA APP NO ARRANCA.
+
+------------------------------------------------------------
+PASO 4 - DEPLOY
+------------------------------------------------------------
+
+1. Click en "Create Web Service"
+2. Esperá 5-10 minutos (primera vez tarda más)
+3. Render te da una URL pública: https://enygma.onrender.com
+4. ¡Listo! La app está online
+
+------------------------------------------------------------
+DATOS TÉCNICOS DEL PROYECTO
+------------------------------------------------------------
+
+Estructura:
+- Frontend:   artifacts/enygma/          (React + Vite)
+- Backend:    artifacts/api-server/      (Express + Node)
+- API Spec:   lib/api-spec/openapi.yaml
+- Puerto API: 10000 (en producción)
+
+Datos externos:
+- Películas:  Google Sheets (público, no requiere config)
+- TMDB API:   Requiere TMDB_API_KEY en variables de entorno
+
+Build output:
+- Frontend compila en:  artifacts/enygma/dist/public/
+- Backend compila en:   artifacts/api-server/dist/
+- El backend sirve el frontend automáticamente
+
+Node version recomendada: 20.x o superior
+
+------------------------------------------------------------
+ACTUALIZAR LA APP EN RENDER (cuando hagas cambios)
+------------------------------------------------------------
+
+Cada vez que hagas cambios en el código:
+
+   git add .
+   git commit -m "descripción del cambio"
+   git push
+
+Render detecta el push y redeploya automáticamente.
+
+------------------------------------------------------------
+SOPORTE
+------------------------------------------------------------
+
+render.com/docs  -  Documentación oficial de Render
+github.com/docs  -  Documentación de GitHub
+
+============================================================

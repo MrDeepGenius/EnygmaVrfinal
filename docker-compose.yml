@@ -1,0 +1,15 @@
+services:
+  enygma:
+    build: .
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      # Opcional: override de Sheets (si no, usa defaults del repo)
+      # MOVIES_SHEET_URL: ""
+      # SERIES_SHEET_URL: ""
+      # ANIME_SHEET_URL: ""
+      # Recomendado: tu key de TMDB (si no, usa fallback del repo)
+      # TMDB_API_KEY: ""
+    ports:
+      - "80:8080"
+

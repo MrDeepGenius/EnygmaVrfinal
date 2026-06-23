@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.enygma.cine" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>ENYGMA</name>
+    <description>ENYGMA - Plataforma de Streaming Premium</description>
+    <author email="support@enygmacinehd.fun" href="https://enygmacinehd.fun">ENYGMA</author>
+    
+    <!-- Permisos -->
+    <feature name="http://api.phonegap.com/1.0/battery"/>
+    <feature name="http://api.phonegap.com/1.0/camera"/>
+    <feature name="http://api.phonegap.com/1.0/contacts"/>
+    <feature name="http://api.phonegap.com/1.0/file"/>
+    <feature name="http://api.phonegap.com/1.0/geolocation"/>
+    <feature name="http://api.phonegap.com/1.0/media"/>
+    <feature name="http://api.phonegap.com/1.0/network"/>
+    <feature name="http://api.phonegap.com/1.0/notification"/>
+    
+    <!-- Permisos Android -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
+    <!-- Características -->
+    <feature name="Camera">
+        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+    </feature>
+    
+    <!-- Página de inicio -->
+    <content src="index.html" />
+    <access origin="*" />
+    
+    <!-- Iconos y splash screens -->
+    <icon src="icon.png" gap:platform="all" />
+    
+    <!-- Android TV -->
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    
+    <!-- Preferencias -->
+    <preference name="phonegap-version" value="latest" />
+    <preference name="orientation" value="landscape" />
+    <preference name="fullscreen" value="false" />
+    <preference name="webviewbounce" value="false" />
+    <preference name="preloadjs" value="true" />
+    <preference name="InAppBrowserStorageEnabled" value="true" />
+    <preference name="media-playback-requires-user-action" value="false" />
+    <preference name="allow-inline-media-playback" value="true" />
+    <preference name="BackupWebStorage" value="cloud" />
+</widget>

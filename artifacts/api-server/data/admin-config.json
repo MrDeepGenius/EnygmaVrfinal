@@ -1,0 +1,694 @@
+{
+  "banner": {
+    "override": false,
+    "items": []
+  },
+  "top10": {
+    "override": false,
+    "items": []
+  },
+  "hiddenSections": [],
+  "customSections": [
+    {
+      "id": "tmdb_1779338849483",
+      "title": "Tendencias (Semana)",
+      "position": 0,
+      "items": [
+        {
+          "id": "76479",
+          "tmdbId": 76479,
+          "titulo": "The Boys",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/5kgY14oisiHcJ4zq0Xgq1e97PHm.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/bq28ajZaoMyzEIm6REelqyqtEDZ.jpg",
+          "overview": "La serie tiene lugar en un mundo en el que los superhéroes representan el lado oscuro de la celebridad y la fama. Un grupo de vigilantes que se hacen llamar \"The Boys\" decide hacer todo lo posible por frenar a los superhéroes que están perjudicando a la sociedad, independientemente de los riesgos que ello conlleva.",
+          "year": "2019",
+          "rating": 8.461
+        },
+        {
+          "id": "1304313",
+          "tmdbId": 1304313,
+          "titulo": "La momia de Lee Cronin",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/qlLsNgRUiPPEIVbcqZR2KmOBL7e.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/wMrV8SLne1jHLeYS0lLrA1Tf86P.jpg",
+          "overview": "La joven hija de un periodista desaparece en el desierto sin dejar rastro—ocho años más tarde, la familia rota se conmociona cuando ella es devuelta a ellos, y lo que debiera haber sido una reunión jubilosa se convierte en una auténtica pesadilla.",
+          "year": "2026",
+          "rating": 7.764
+        },
+        {
+          "id": "1439930",
+          "tmdbId": 1439930,
+          "titulo": "The Punisher: One Last Kill",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/p1eqHRxfIxfgtDgfjWcpEESeEvF.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/qO55CD8tgVL1T4WKn6zYFFiD6lL.jpg",
+          "overview": "Mientras Frank Castle busca propósito más allá de la venganza, una fuerza inesperada lo arrastra de nuevo a la lucha.",
+          "year": "2026",
+          "rating": 8.502
+        },
+        {
+          "id": "1380291",
+          "tmdbId": 1380291,
+          "titulo": "Jack Ryan de Tom Clancy: Guerra Encubierta",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/dJqv61OB3jsdUEOJTaOGZ64ZLeD.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/69KkxROnZoJdQAulnY5B7Gx6D7Z.jpg",
+          "overview": "En esta nueva película, Jack Ryan se ve empujado de vuelta al espionaje cuando una misión secreta internacional destapa una conspiración mortal. Contra reloj, se une a Mike November y James Greer, sus aliados de la CIA, y a Emma Marlow, una perspicaz agente del MI6, para enfrentarse a una unidad de operaciones encubiertas en una batalla muy personal y arriesgada.",
+          "year": "2026",
+          "rating": 7.1
+        },
+        {
+          "id": "1339713",
+          "tmdbId": 1339713,
+          "titulo": "Obsesión",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/3ryYzE3WPCfFObyJNN1wVU54HaX.jpg",
+          "overview": "El anhelo romántico desesperado de un chico por su amor platónico de toda la vida desencadena un siniestro hechizo: Niki se vuelve irracionalmente obsesiva hasta convertirse en la sombra de Bear. Una fantasía aparentemente inofensiva que se convertirá en una perturbadora pesadilla.",
+          "year": "2026",
+          "rating": 8.1
+        },
+        {
+          "id": "687163",
+          "tmdbId": 687163,
+          "titulo": "Proyecto Salvación",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/fj1FAiS6OHidg1O1T6z2356fD6u.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/2I1OFQJ0L9T0dpU6FobKFWV2PxX.jpg",
+          "overview": "El profesor de ciencias Ryland Grace se despierta en una nave espacial a años luz de casa sin recordar quién es ni cómo ha llegado hasta allí. A medida que recupera la memoria, empieza a descubrir su misión: resolver el enigma de la misteriosa sustancia que provoca la extinción del sol. Deberá recurrir a sus conocimientos científicos y a sus ideas poco ortodoxas para salvar todo lo que hay en la Tierra de la extinción... pero una amistad inesperada significa que quizá no tenga que hacerlo solo.",
+          "year": "2026",
+          "rating": 8.602
+        },
+        {
+          "id": "1226863",
+          "tmdbId": 1226863,
+          "titulo": "Super Mario Galaxy la película",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/4Js0gYWxuvTN6b8iAaSF1cSQzBs.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/9Z2uDYXqJrlmePznQQJhL6d92Rq.jpg",
+          "overview": "Secuela de 'Super Mario Bros: La película', basada en la saga 'Mario Galaxy'. Los hermanos Mario y Luigi y la princesa Peach emprenden una aventura hasta los confines del espacio y a través de la galaxia.",
+          "year": "2026",
+          "rating": 7.362
+        },
+        {
+          "id": "273240",
+          "tmdbId": 273240,
+          "titulo": "Off Campus",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/pI4sEVVbswtyOL2uaFxZs2tPOnQ.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/52sp0vPhLOWrZ1QoZIWiapronM.jpg",
+          "overview": "Hannah Wells hace un trato con el capitán de hockey Garrett Graham: ella le da clase de filosofía y él la ayuda a conquistar al chico que le gusta. Su acuerdo se convierte en una auténtica conexión cuando ambos se enfrentan a su pasado.",
+          "year": "2026",
+          "rating": 8.988
+        },
+        {
+          "id": "299167",
+          "tmdbId": 299167,
+          "titulo": "Rancho Dutton",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/4KTqlq5jwt53LoZdP8ui33TpFaq.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/ewlmL0nxo2lLqBj69upgp2gjHpV.jpg",
+          "overview": "Rip y Beth Dutton arriesgan todo por una nueva vida en el Sur de Texas, pero la promesa de un futuro lejos de los fantasmas de Yellowstone choca con nuevas y brutales realidades y un rancho rival que a toda costa protege su imperio.",
+          "year": "2026",
+          "rating": 9.465
+        },
+        {
+          "id": "931285",
+          "tmdbId": 931285,
+          "titulo": "Mortal Kombat II",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/ivVKHht5jutNGnObn1y5sSDrAXn.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/4EAAwpylq313qrDqpCxulUrXBNF.jpg",
+          "overview": "Los campeones favoritos de los fans, ahora acompañados por el propio Johnny Cage, se enfrentan cara a cara en la definitiva y sangrienta batalla a muerte para vencer al oscuro régimen de Shao Kahn, que amenaza la existencia del Reino de la Tierra y a sus defensores.",
+          "year": "2026",
+          "rating": 6.919
+        },
+        {
+          "id": "308014",
+          "tmdbId": 308014,
+          "titulo": "Berlín y la dama del armiño",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/3uhJ3AHKxSsEWe1BUG9pV0bpqna.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/ntPgSYKwPg9xKO4VvLJYfInSyZa.jpg",
+          "overview": "Ansioso por dar un nuevo golpe, Berlín reúne a su banda en Sevilla y convierte a un ambicioso duque en víctima de su propio plan: robar una obra de arte de Leonardo da Vinci.",
+          "year": "2026",
+          "rating": 8.233
+        },
+        {
+          "id": "124364",
+          "tmdbId": 124364,
+          "titulo": "FROM",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/pRtJagIxpfODzzb0T0NAvZSzErC.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/auyEi4Xho43HFvVQnd42LzqBdiV.jpg",
+          "overview": "Desvela el misterio de un pueblo de pesadilla en el centro de Norteamérica que atrapa a todos los que entran. Mientras los residentes involuntarios luchan por mantener una sensación de normalidad y buscan una salida, también deben sobrevivir a las amenazas del bosque circundante, incluidas las aterradoras criaturas que salen cuando se pone el sol.",
+          "year": "2022",
+          "rating": 8.387
+        },
+        {
+          "id": "85552",
+          "tmdbId": 85552,
+          "titulo": "Euphoria",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/6Sdm5XwdCnspdEF8fTFx6UJrl7o.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/mez2Z3WqlPKNXpi7mWoiiE5guE9.jpg",
+          "overview": "Una reflexión sobre la adolescencia a través de un grupo de estudiantes de instituto que tienen que hacer frente a temas recurrentes de su edad, como la droga, el sexo y la violencia.",
+          "year": "2019",
+          "rating": 8.289
+        },
+        {
+          "id": "1242332",
+          "tmdbId": 1242332,
+          "titulo": "Normal",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/j5cW7TM0onwp3fQiowXX5ZJLUHR.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/1YU6Hy3x7fUh7dfOzSfjifTp20g.jpg",
+          "overview": "Ulysses es un sheriff sustituto que llega al tranquilo y apartado pueblo de Normal, Minnesota, huyendo de un pasado turbulento. Sin embargo, cuando el banco local es asaltado, su investigación desencadena una serie de eventos que revelan que el pueblo esconde una oscura y profunda red criminal.",
+          "year": "2026",
+          "rating": 6.583
+        },
+        {
+          "id": "259837",
+          "tmdbId": 259837,
+          "titulo": "Los SUPERfrikis",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/zEZuIW4UDU9OHTwN7zMf8BE5tOF.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/y2u7d8evmnTivi3LaVql01Sfea4.jpg",
+          "overview": "En esta disparatada comedia de acción, un grupo de vecinos de lo más pintoresco adquieren superpoderes por accidente y luchan contra el mal en plena histeria apocalíptica.",
+          "year": "2026",
+          "rating": 9.407
+        },
+        {
+          "id": "936075",
+          "tmdbId": 936075,
+          "titulo": "Michael",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/2uK36ujoDXOfNiJ5Yp3raVprB51.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/xBT0oNq6rsTFv4SxG5uGRIEOrq6.jpg",
+          "overview": "El viaje de Michael Jackson más allá de la música, desde el descubrimiento de su extraordinario talento como líder de los Jackson Five hasta convertirse en una visionaria estrella cuya ambición creativa despertó un incansable afán por consagrarse como el mayor icono de la industria del entretenimiento.",
+          "year": "2026",
+          "rating": 7.6
+        },
+        {
+          "id": "1102883",
+          "tmdbId": 1102883,
+          "titulo": "Mother Mary",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/qMgUI6pxkPtIuoXX4DcJ6X7bdt2.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/4R47iCjnTgwICFPxAJOxzE99Wzj.jpg",
+          "overview": "La intensa relación entre la cantante de pop Mary y Sam, una antigua amiga suya, diseñadora de moda, que se vuelven a reunir tras la necesidad de la primera de un vestido para su nueva gira de conciertos.",
+          "year": "2026",
+          "rating": 6
+        },
+        {
+          "id": "1228710",
+          "tmdbId": 1228710,
+          "titulo": "Star Wars: The Mandalorian and Grogu",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/sWitU9IjgFwf6y1OrI0zUaL3GNa.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/4lj7MZtcIDI2FmZXGkFWh0sNCsq.jpg",
+          "overview": "Continuación de la serie \"The Mandalorian\" en forma de película. Un solitario cazarrecompensas a la fuga protege a un codiciado bebé alienígena mientras evita ser capturado en una galaxia anárquica y peligrosa.",
+          "year": "2026",
+          "rating": 6.2
+        },
+        {
+          "id": "37854",
+          "tmdbId": 37854,
+          "titulo": "One Piece",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/8f33Q5AuM2G5ZqFeusbIqDjr3cI.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/4Mt7WHox67uJ1yErwTBFcV8KWgG.jpg",
+          "overview": "Esta historia se sitúa en el momento más álgido de la Gran Era de los Piratas, cuando el joven Monkey D. Luffy quiere llegar a ser el Rey de los Piratas y hacerse al fin con un legendario tesoro, el One Piece.",
+          "year": "1999",
+          "rating": 8.7
+        },
+        {
+          "id": "83533",
+          "tmdbId": 83533,
+          "titulo": "Avatar: Fuego y ceniza",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/4n1U0Mwn7djux6VKNYDRWPgS2x6.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/iN41Ccw4DctL8npfmYg1j5Tr1eb.jpg",
+          "overview": "Jake Sully y Neytiri enfrentan una nueva amenaza en Pandora: los Ash People, una tribu Na'vi violenta y sedienta de poder, liderada por la implacable Varang. Tras la devastadora guerra contra la RDA y la pérdida de su hijo mayor, la familia de Jake deberá luchar por su supervivencia y el futuro de Pandora en un conflicto que llevará a los personajes a sus límites emocionales y físicos. Con nuevos y antiguos aliados, esta épica visual y emocional redefine el destino de un mundo al borde del abismo.",
+          "year": "2025",
+          "rating": 7.487
+        }
+      ]
+    },
+    {
+      "id": "tmdb_1779340554795",
+      "title": "Series Populares",
+      "position": 1,
+      "items": [
+        {
+          "id": "124364",
+          "tmdbId": 124364,
+          "titulo": "FROM",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/pRtJagIxpfODzzb0T0NAvZSzErC.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/auyEi4Xho43HFvVQnd42LzqBdiV.jpg",
+          "overview": "Desvela el misterio de un pueblo de pesadilla en el centro de Norteamérica que atrapa a todos los que entran. Mientras los residentes involuntarios luchan por mantener una sensación de normalidad y buscan una salida, también deben sobrevivir a las amenazas del bosque circundante, incluidas las aterradoras criaturas que salen cuando se pone el sol.",
+          "year": "2022",
+          "rating": 8.385
+        },
+        {
+          "id": "76479",
+          "tmdbId": 76479,
+          "titulo": "The Boys",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/5kgY14oisiHcJ4zq0Xgq1e97PHm.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/bq28ajZaoMyzEIm6REelqyqtEDZ.jpg",
+          "overview": "La serie tiene lugar en un mundo en el que los superhéroes representan el lado oscuro de la celebridad y la fama. Un grupo de vigilantes que se hacen llamar \"The Boys\" decide hacer todo lo posible por frenar a los superhéroes que están perjudicando a la sociedad, independientemente de los riesgos que ello conlleva.",
+          "year": "2019",
+          "rating": 8.46
+        },
+        {
+          "id": "2734",
+          "tmdbId": 2734,
+          "titulo": "Ley y orden: Unidad de Víctimas Especiales",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/kvo558UKEhp8v3JoRGCSIx3Xxab.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/obtdxPgmfykYwVnvuYXC5f2xKlQ.jpg",
+          "overview": "‘Ley y Orden: Unidad de Víctimas Especiales’ es una serie de televisión estadounidense grabada en Nueva York donde es también principalmente producida. Con el estilo de la original ‘Ley y Orden’ los episodios son usualmente \"sacados de los titulares\" o basados libremente en verdaderos asesinatos que han recibido la atención de los medios.",
+          "year": "1999",
+          "rating": 7.939
+        },
+        {
+          "id": "273240",
+          "tmdbId": 273240,
+          "titulo": "Off Campus",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/pI4sEVVbswtyOL2uaFxZs2tPOnQ.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/52sp0vPhLOWrZ1QoZIWiapronM.jpg",
+          "overview": "Hannah Wells hace un trato con el capitán de hockey Garrett Graham: ella le da clase de filosofía y él la ayuda a conquistar al chico que le gusta. Su acuerdo se convierte en una auténtica conexión cuando ambos se enfrentan a su pasado.",
+          "year": "2026",
+          "rating": 9
+        },
+        {
+          "id": "79744",
+          "tmdbId": 79744,
+          "titulo": "The Rookie",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/g39Rn6PcZjK2yLzz5Z5oBKSpsZR.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/6iNWfGVCEfASDdlNb05TP5nG0ll.jpg",
+          "overview": "Comenzar de nuevo no es fácil, especialmente para el chico de una ciudad pequeña John Nolan que, después de un incidente que cambia su vida, está persiguiendo su sueño de ser un oficial de policía de Los Ángeles. Como el novato más viejo de la fuerza, se ha encontrado con el escepticismo de algunos de los superiores que lo ven como una crisis ambulante.",
+          "year": "2018",
+          "rating": 8.543
+        },
+        {
+          "id": "85552",
+          "tmdbId": 85552,
+          "titulo": "Euphoria",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/6Sdm5XwdCnspdEF8fTFx6UJrl7o.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/mez2Z3WqlPKNXpi7mWoiiE5guE9.jpg",
+          "overview": "Una reflexión sobre la adolescencia a través de un grupo de estudiantes de instituto que tienen que hacer frente a temas recurrentes de su edad, como la droga, el sexo y la violencia.",
+          "year": "2019",
+          "rating": 8.3
+        },
+        {
+          "id": "1416",
+          "tmdbId": 1416,
+          "titulo": "Anatomía de Grey",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/2kFOeA4oCxdHRfHiv8JEa7y3vD9.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/jP0Rhj9OTPDAwQlHQwOLFDdeE8t.jpg",
+          "overview": "La vida de Meredith Grey no es nada fácil. Intenta tomar las riendas de su vida, aunque su trabajo sea de esos que te hacen la vida imposible. Meredith es una cirujana interna de primer año en el Hospital Grace de Seattle, el programa de prácticas más duro de la Facultad de Medicina de Harvard. Y ella lo va a comprobar. Pero no estará sola. Un elenco de compañeros de promoción tendrán que superar la misma prueba. Ahora están en el mundo real, son doctores del hospital. Y en un mundo donde la experiencia en el trabajo puede ser un factor de vida o muerte, todos ellos tendrán que lidiar con los altibajos de sus vidas personales.",
+          "year": "2005",
+          "rating": 8.209
+        },
+        {
+          "id": "549",
+          "tmdbId": 549,
+          "titulo": "Ley y orden",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/vcr8xAdptafbIiU16alUgVak6aM.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/tc7canPSAn2X14hYi6Rl3gZm1o4.jpg",
+          "overview": "Serie sobre la investigación de crímenes en la ciudad de Nueva York. Policías y jueces son los principales protagonistas.",
+          "year": "1990",
+          "rating": 7.305
+        },
+        {
+          "id": "308014",
+          "tmdbId": 308014,
+          "titulo": "Berlín y la dama del armiño",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/3uhJ3AHKxSsEWe1BUG9pV0bpqna.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/ntPgSYKwPg9xKO4VvLJYfInSyZa.jpg",
+          "overview": "Ansioso por dar un nuevo golpe, Berlín reúne a su banda en Sevilla y convierte a un ambicioso duque en víctima de su propio plan: robar una obra de arte de Leonardo da Vinci.",
+          "year": "2026",
+          "rating": 8.233
+        },
+        {
+          "id": "1622",
+          "tmdbId": 1622,
+          "titulo": "Sobrenatural",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/58Qaj36FZDz54H36LsUI8mGiW9y.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/ro0tlgnsco4SwbdAgmscLkSlMSL.jpg",
+          "overview": "Cuando eran niños, Sam y Dean Winchester, perdieron a su madre debido a una misteriosa y demoníaca fuerza supernatural. Posteriormente, su padre los crió para que fueran soldados. Él les enseño sobre el mal que vive en los rincones obscuros y en las carreteras secundarias de América... y también les enseñó como matarlo. Ahora los hermanos Winchester recorren el país en su Chevy Impala del '67, luchando contra todo tipo de amenaza sobrenatural que encuentran en el camino.",
+          "year": "2005",
+          "rating": 8.3
+        },
+        {
+          "id": "456",
+          "tmdbId": 456,
+          "titulo": "Los Simpson",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/9hmoEmntaYrrlb4HKSFisWUQnqy.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/jIArNHIekrCSVgdMbKPAXpPY03Y.jpg",
+          "overview": "El día a día de una peculiar familia formada por Homer, Marge, Bart, Maggie y Lisa Simpson y otros divertidos personajes de la localidad norteamericana de Springfield. Homer, el padre, es un desastroso inspector de seguridad de una central nuclear. Marge, la madre, es un ama de casa acostumbrada a soportar a su peculiar familia. Bart, de diez años, intenta divertirse con travesuras de todo tipo. Lisa es la más inteligente de la familia, y Maggie, la más pequeña, es un bebé que todavía no habla, pero que juega un importante papel.",
+          "year": "1989",
+          "rating": 8.017
+        },
+        {
+          "id": "5920",
+          "tmdbId": 5920,
+          "titulo": "El mentalista",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/snKUzvCl3kGv0RWBjEjnOXMGvdl.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/q3pCsNvJ7CmdJUz2sJEEUY3pOPC.jpg",
+          "overview": "El mentalista es una serie policiaca americana sobre Patrick Jane, ex médium, que trabaja de asesor para la Oficina de Investigación de California (California Bureau of Investigation), usando su altamente desarrollada capacidad de observación, que anteriormente usaba para \"leer\" mentes.",
+          "year": "2008",
+          "rating": 8.3
+        },
+        {
+          "id": "4614",
+          "tmdbId": 4614,
+          "titulo": "Navy: Investigación criminal",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/rkWK3hcCiFwtIhLYnTPKjcZwTTN.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/nn3SuLTO4hum8yAxaY4ql8h6kRk.jpg",
+          "overview": "Gibbs, agente especial del servicio de investigación criminal de la armada, dirige un equipo extravagante para resolver crímenes que van desde el terrorismo y el espionaje hasta el terrorismo.",
+          "year": "2003",
+          "rating": 7.617
+        },
+        {
+          "id": "33238",
+          "tmdbId": 33238,
+          "titulo": "Running Man",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/15SMnscZqd7HZ0bzruatOcKUlOV.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/wsHj4oHQJoe7DMYaqNFwVoyLiAh.jpg",
+          "overview": "Running Man es un espectáculo de variedades de Corea del Sur transmitido desde el 11 de julio de 2010 hasta ahora a través de SBS. El programa forma parte de la formación de \"Good Sunday\". El programa fue creado por Jo Hyo-jin, Kim Joo-hyung y Im Hyung-taek.",
+          "year": "2010",
+          "rating": 8.2
+        },
+        {
+          "id": "1434",
+          "tmdbId": 1434,
+          "titulo": "Padre de familia",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/oalgdH3vglKvg1SB4OaMyoJ29sx.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/l7wShoIdIUwaDIbsHno9pO5MZXT.jpg",
+          "overview": "Los Griffin son una mediocre familia compuesta por Peter y Lois; sus hijos, Meg, Chris, y Stewie; y su antropomórfica mascota canina Brian. Está ambientada en la ciudad ficticia de Quahog, Rhode Island, y gran parte de su humor se exhibe en forma de pequeños cortes que frecuentemente se mofan de la cultura americana.",
+          "year": "1999",
+          "rating": 7.4
+        },
+        {
+          "id": "206122",
+          "tmdbId": 206122,
+          "titulo": "怦然心动20岁",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/eCtD0KAa5rRNMnvB4KvLYD4ntRk.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/we0PMkWfv10Sm9BsxxOYRmboEv6.jpg",
+          "overview": "",
+          "year": "2021",
+          "rating": 0
+        },
+        {
+          "id": "1399",
+          "tmdbId": 1399,
+          "titulo": "Juego de tronos",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/3hDtRuwTfQQYRst3kjhvp4Cogjw.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/2OMB0ynKlyIenMJWI2Dy9IWT4c.jpg",
+          "overview": "En una tierra donde los veranos duran décadas y los inviernos pueden durar toda una vida, los problemas acechan. Desde las maquinaciones del sur a las salvajes tierras del este, pasando por el helado norte y el milenario muro que protege el reino de las fuerzas tenebrosas, dos poderosas familias mantienen un enfrentamiento letal por gobernar los Siete Reinos de Poniente. Mientras la traición, la lujuria y las fuerzas sobrenaturales sacuden los pilares de los reinos, la sangrienta batalla por el trono de Hierro tendrá consecuencias imprevistas y trascendentales. El invierno se acerca. Que empiece 'Juego de tronos'.",
+          "year": "2011",
+          "rating": 8.461
+        },
+        {
+          "id": "259837",
+          "tmdbId": 259837,
+          "titulo": "Los SUPERfrikis",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/zEZuIW4UDU9OHTwN7zMf8BE5tOF.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/y2u7d8evmnTivi3LaVql01Sfea4.jpg",
+          "overview": "En esta disparatada comedia de acción, un grupo de vecinos de lo más pintoresco adquieren superpoderes por accidente y luchan contra el mal en plena histeria apocalíptica.",
+          "year": "2026",
+          "rating": 9.407
+        },
+        {
+          "id": "4057",
+          "tmdbId": 4057,
+          "titulo": "Mentes criminales",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/gV0E4age3IdoPFInx57CDByixxc.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/w88B4ooZ2LSYPw5107JOkjvI8PI.jpg",
+          "overview": "Mentes criminales (Criminal Minds) es una serie de drama criminológico. Se estrenó el 22 de septiembre de 2005 en el canal de televisión estadounidense, CBS. Muestra el trabajo de los miembros del equipo de Unidad de Análisis de Conducta del FBI, un grupo de investigadores de diversas ramas de la criminología que se dedica a hacer análisis psicológicos y criminológicos a criminales para facilitar su captura.",
+          "year": "2005",
+          "rating": 8.299
+        },
+        {
+          "id": "764",
+          "tmdbId": 764,
+          "titulo": "Los asesinatos de Midsomer",
+          "tipo": "serie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/pz7tsWxe0TTdfJnWPjZAEnrSl5M.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/qVmgq1KXBp6BF2EqYPPaUG9iUGy.jpg",
+          "overview": "Su protagonista, hasta el año 2011, era el inspector jefe Tom Barnaby (John Nettles), que trabajaba para Caustron CID; más tarde, fue reemplazado por el actor Neil Dudgeon, que interpreta a un primo menor de Tom, John Barnaby. En cada episodio, Barnaby investiga uno de los numerosos asesinatos que ocurren en el condado ficticio de Midsomer, acompañado por un sargento, que fue cambiando durante la historia del programa: Gavin Troy (Daniel Casey), Dan Scott (John Hopkins) y Ben Jones (Jason Hughes).",
+          "year": "1997",
+          "rating": 7.486
+        }
+      ]
+    },
+    {
+      "id": "tmdb_1779343209097",
+      "title": "Próximos Estrenos",
+      "position": 2,
+      "items": [
+        {
+          "id": "1339713",
+          "tmdbId": 1339713,
+          "titulo": "Obsesión",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/3ryYzE3WPCfFObyJNN1wVU54HaX.jpg",
+          "overview": "El anhelo romántico desesperado de un chico por su amor platónico de toda la vida desencadena un siniestro hechizo: Niki se vuelve irracionalmente obsesiva hasta convertirse en la sombra de Bear. Una fantasía aparentemente inofensiva que se convertirá en una perturbadora pesadilla.",
+          "year": "2026",
+          "rating": 8.052
+        },
+        {
+          "id": "931285",
+          "tmdbId": 931285,
+          "titulo": "Mortal Kombat II",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/ivVKHht5jutNGnObn1y5sSDrAXn.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/4EAAwpylq313qrDqpCxulUrXBNF.jpg",
+          "overview": "Los campeones favoritos de los fans, ahora acompañados por el propio Johnny Cage, se enfrentan cara a cara en la definitiva y sangrienta batalla a muerte para vencer al oscuro régimen de Shao Kahn, que amenaza la existencia del Reino de la Tierra y a sus defensores.",
+          "year": "2026",
+          "rating": 6.919
+        },
+        {
+          "id": "936075",
+          "tmdbId": 936075,
+          "titulo": "Michael",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/2uK36ujoDXOfNiJ5Yp3raVprB51.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/xBT0oNq6rsTFv4SxG5uGRIEOrq6.jpg",
+          "overview": "El viaje de Michael Jackson más allá de la música, desde el descubrimiento de su extraordinario talento como líder de los Jackson Five hasta convertirse en una visionaria estrella cuya ambición creativa despertó un incansable afán por consagrarse como el mayor icono de la industria del entretenimiento.",
+          "year": "2026",
+          "rating": 7.572
+        },
+        {
+          "id": "1311031",
+          "tmdbId": 1311031,
+          "titulo": "Guardianes de la noche: Kimetsu no Yaiba La fortaleza infinita",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/iWLV12z9oexSRLz2WKyqCZbKoPA.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/1RgPyOhN4DRs225BGTlHJqCudII.jpg",
+          "overview": "El Cuerpo de Cazadores de Demonios se enfrenta a los Doce Kizuki restantes antes de enfrentarse a Muzan en el Castillo del Infinito para derrotarlo de una vez por todas.",
+          "year": "2025",
+          "rating": 7.708
+        },
+        {
+          "id": "1368166",
+          "tmdbId": 1368166,
+          "titulo": "La asistenta",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/tMEu0gniT4zfcyDF5KMjof0DMog.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/zTnAnYIn0Iv3cn0ZHlzLhou3ybm.jpg",
+          "overview": "Una joven (Sydney Sweeney), con un pasado complicado comienza a trabajar como asistenta en la lujosa casa de los Winchester. A medida que se adentra en la vida de la familia, descubrirá secretos oscuros que pondrán en peligro su seguridad, pero quizá ya sea demasiado tarde... Adaptación de la novela de Freida McFadden.",
+          "year": "2025",
+          "rating": 7.249
+        },
+        {
+          "id": "1242332",
+          "tmdbId": 1242332,
+          "titulo": "Normal",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/j5cW7TM0onwp3fQiowXX5ZJLUHR.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/y9anLJX0ozvldlM1wgGafFz28QR.jpg",
+          "overview": "Ulysses es un sheriff sustituto que llega al tranquilo y apartado pueblo de Normal, Minnesota, huyendo de un pasado turbulento. Sin embargo, cuando el banco local es asaltado, su investigación desencadena una serie de eventos que revelan que el pueblo esconde una oscura y profunda red criminal.",
+          "year": "2026",
+          "rating": 6.7
+        },
+        {
+          "id": "1228710",
+          "tmdbId": 1228710,
+          "titulo": "Star Wars: The Mandalorian and Grogu",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/sWitU9IjgFwf6y1OrI0zUaL3GNa.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/4lj7MZtcIDI2FmZXGkFWh0sNCsq.jpg",
+          "overview": "Continuación de la serie \"The Mandalorian\" en forma de película. Un solitario cazarrecompensas a la fuga protege a un codiciado bebé alienígena mientras evita ser capturado en una galaxia anárquica y peligrosa.",
+          "year": "2026",
+          "rating": 6.232
+        },
+        {
+          "id": "1122573",
+          "tmdbId": 1122573,
+          "titulo": "En la zona gris",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/yfgquGqeT6DtdsIzPPzTLRABBy0.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/oBft4BZeoDQzTT9ZGijClr76qvK.jpg",
+          "overview": "Un equipo encubierto de agentes de élite viven en la sombra, tan cómodos manejando el poder y la influencia como armas automáticas y explosivos de gran potencia. Cuando un déspota roba una fortuna de mil millones de dólares, son enviados a recuperarla en lo que para cualquier otro sería una misión suicida. Lo que comienza como un atraco imposible empeora aún más y se convierte en una guerra total de estrategia, engaño y supervivencia.",
+          "year": "2026",
+          "rating": 6.323
+        },
+        {
+          "id": "1110034",
+          "tmdbId": 1110034,
+          "titulo": "Kraken",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/8ExwomWgJoXBdY3u1Otiw2zY9wZ.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/oV472EbPedkc5QzqolGc7sCgCnn.jpg",
+          "overview": "Johanne es una bióloga marina que está investigando en una piscifactoría de Vangsnes, una comunidad rural situada junto al fiordo, cuando se topa con varios sucesos extraños. Junto con las brutales muertes de dos adolescentes de la localidad, todos los indicios apuntan al profundo fiordo. ¿Puede haber más en las profundidades de lo que el ojo puede ver? En el fondo del fiordo más profundo de Noruega descansa un monstruo mítico tan grande como una montaña, con una miríada de brazos dispuestos a aplastar y devorar todo lo que puedan agarrar.",
+          "year": "2026",
+          "rating": 5.9
+        },
+        {
+          "id": "1325734",
+          "tmdbId": 1325734,
+          "titulo": "El drama",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/zgfBYGYCNcOZ51JDbr6tm45H8y0.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/rw1WmxUvmbwRsbAX12m6toIg04j.jpg",
+          "overview": "Una pareja, en los días previos a su boda, se enfrenta a una crisis cuando unas inesperadas revelaciones desbaratan lo que uno de ellos creía saber sobre el otro.",
+          "year": "2026",
+          "rating": 6.933
+        },
+        {
+          "id": "1280738",
+          "tmdbId": 1280738,
+          "titulo": "火遮眼",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/zP19YO60jwEsfKd5Qf1UvA5uJu8.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/79GYNlnCK7kfQPAyQI13NLatK07.jpg",
+          "overview": "",
+          "year": "2026",
+          "rating": 0
+        },
+        {
+          "id": "372058",
+          "tmdbId": 372058,
+          "titulo": "Your Name.",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/iaiy3tg9QVkDpObm1IGqmbC9A5C.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/8x9iKH8kWA0zdkgNdpAew7OstYe.jpg",
+          "overview": "Taki y Mitsuha descubren un día que durante el sueño sus cuerpos se intercambian, y comienzan a comunicarse por medio de notas. A medida que consiguen superar torpemente un reto tras otro, se va creando entre los dos un vínculo que poco a poco se convierte en algo más romántico.",
+          "year": "2016",
+          "rating": 8.479
+        },
+        {
+          "id": "1140521",
+          "tmdbId": 1140521,
+          "titulo": "El árbol muy muy lejano",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/udXvLxC5gAqN8SinemyFBEcHpTf.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/3o7t1gF0wbXAtELCkIcYyPXoIxA.jpg",
+          "overview": "Polly, Tim, y sus tres hijos son una familia moderna que se ve obligada a mudarse a la remota campiña inglesa. Poco después de su llegada, los niños descubren un árbol mágico y a sus extraordinarios y excéntricos habitantes.",
+          "year": "2026",
+          "rating": 6.5
+        },
+        {
+          "id": "1400357",
+          "tmdbId": 1400357,
+          "titulo": "The Christophers",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/s6oUrGMNl8hVh7fn0O8oF2rHwrM.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/mWRjVb2Lj9pjOlNcDP7lNvrvSo8.jpg",
+          "overview": "Los hijos de un artista antaño famoso contratan a una falsificadora para que complete unos lienzos inacabados y abandonados hace mucho tiempo, y así tener una herencia cuando él muera.",
+          "year": "2026",
+          "rating": 6.75
+        },
+        {
+          "id": "454639",
+          "tmdbId": 454639,
+          "titulo": "He-Man y los masters del universo",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/1iaoDCWAM5C1kvlmIiCrLUE16uM.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/eQySd26OW7UmCuaeBOL7qy6foMn.jpg",
+          "overview": "En las regiones más lejanas del espacio, el reino de Eternia está amenazado por el villano Skeletor y sus traviesos ejércitos de oscuridad. Para salvar el reino de su padre y proteger las vidas de sus seres queridos, el joven príncipe Adam tiene que recuperar una espada mítica y convertirse en el legendario guerrero conocido como \"He-Man\".",
+          "year": "2026",
+          "rating": 0
+        },
+        {
+          "id": "1367642",
+          "tmdbId": 1367642,
+          "titulo": "No te olvidaré",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/iPJ4V6o5PttdBmHoehdOtWqQ6gx.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/5rxEnsgriw8z065q51lrvPKYmCL.jpg",
+          "overview": "Cuando los abuelos y tutores de Diem se niegan categóricamente a permitir que la vea, Kenna descubre una compasión inesperada seguida de un sentimiento más profundo y real con Ledger, exjugador de la NFL y propietario de un bar local. A medida que su romance secreto va cobrando forma, surgen problemas para los dos, lo que llevará a Kenna a una situación sentimental desoladora y, en último término, a reavivar la esperanza de una segunda oportunidad.",
+          "year": "2026",
+          "rating": 7.412
+        },
+        {
+          "id": "1368314",
+          "tmdbId": 1368314,
+          "titulo": "El pasajero nocturno",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/iX8D97TG8gVvHZ8S4clcdpCX7Uv.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/hl7FEzMqgpsD0RfwMzskzQoiD1M.jpg",
+          "overview": "Después de presenciar un brutal accidente nocturno en la carretera, una joven pareja comprende que algo los ha seguido. Una presencia demoníaca, conocida como El Pasajero Nocturno, se ha unido a ellos y no se detendrá hasta reclamarlos a ambos, convirtiendo su viaje en una auténtica pesadilla.",
+          "year": "2026",
+          "rating": 7
+        },
+        {
+          "id": "1083381",
+          "tmdbId": 1083381,
+          "titulo": "Backrooms",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/u3CfgxtnZRxbIm8JuVTzt3DXQhg.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/mCpwRayjXMFzKHbjbzc5JRKfq1O.jpg",
+          "overview": "Una puerta extraña aparece en el sótano de una sala de exposición de muebles.",
+          "year": "2026",
+          "rating": 10
+        },
+        {
+          "id": "1273221",
+          "tmdbId": 1273221,
+          "titulo": "Scary Movie",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/vUPE82BWRZwq6M5Xc9UNuf8AffK.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/pO7XVtgA6t5JbxY1S8Y4cQEFarR.jpg",
+          "overview": "Veintiséis años después de conseguir escapar de un asesino enmascarado sospechosamente familiar, el Core Four están de vuelta en el punto de mira del asesino y ninguna película de terror está a salvo.",
+          "year": "2026",
+          "rating": 0
+        },
+        {
+          "id": "1084244",
+          "tmdbId": 1084244,
+          "titulo": "Toy Story 5",
+          "tipo": "movie",
+          "posterUrl": "https://image.tmdb.org/t/p/w500/1yF3AztF3rQ8MZ8En8974AWo5zZ.jpg",
+          "backdropUrl": "https://image.tmdb.org/t/p/w1280/coyHrYHD2xHhDoYD6o4uwoJ2o7b.jpg",
+          "overview": "Buzz, Woody, Jessie y el resto de la pandilla tienen un trabajo exponencialmente más difícil cuando se enfrentan a esta nueva amenaza para la hora de jugar: la tecnología.",
+          "year": "2026",
+          "rating": 0
+        }
+      ]
+    }
+  ]
+}

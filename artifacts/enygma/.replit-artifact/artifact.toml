@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "ENYGMA"
+version = "1.0.0"
+id = "artifacts/enygma"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20693
+
+[services.development]
+run = "pnpm --filter @workspace/enygma run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/enygma", "run", "build" ]
+publicDir = "artifacts/enygma/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20693"
+BASE_PATH = "/"
