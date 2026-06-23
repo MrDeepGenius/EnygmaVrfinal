@@ -7,6 +7,7 @@ import { ProfileProvider } from "@/lib/profile-context";
 import { SplashScreen } from "@/components/splash-screen";
 import { TvModeProvider } from "@/lib/tv-mode";
 import { TvRemoteNavigation } from "@/components/tv-remote-navigation";
+import { InstallButton } from "@/components/install-button";
 import { useScrollToTop } from "@/hooks/use-scroll-to-top";
 
 const Profiles = lazy(() => import("@/pages/profiles"));
@@ -96,6 +97,7 @@ function App() {
           <ProfileProvider>
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
               <TvRemoteNavigation />
+              <InstallButton />
               <Router />
             </WouterRouter>
           </ProfileProvider>
