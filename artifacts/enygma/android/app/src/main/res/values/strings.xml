@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ENYGMA</string>
+    <string name="title_activity_main">ENYGMA</string>
+    <string name="package_name">com.enygmacinehd.app</string>
+    <string name="custom_url_scheme">com.enygmacinehd.app</string>
+</resources>
