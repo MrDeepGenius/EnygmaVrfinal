@@ -1,0 +1,97 @@
+REALIZAR AUDITORÍA COMPLETA DE MONETIZACIÓN EN ENYGMACINE
+
+OBJETIVO:
+Verificar que toda la integración de Adsterra funcione correctamente en PC, Tablet y Mobile sin afectar la experiencia de usuario.
+
+MONETIZACIÓN ACTUAL
+
+SOCIAL BAR
+- Verificar que se cargue una sola vez al iniciar la aplicación.
+- Evitar reinicializaciones al navegar entre páginas.
+- Evitar scripts duplicados.
+
+BANNERS
+
+HOME
+- Banner después de Tendencias.
+- Banner después de Series.
+
+PELÍCULAS
+- Banner entre secciones.
+
+SERIES
+- Banner entre secciones.
+
+ANIME
+- Banner entre secciones.
+
+PERFIL
+- Banner debajo de la información del usuario.
+
+DETALLE
+- Banner debajo de la sinopsis.
+- Encima del botón Ver Ahora.
+
+RESPONSIVE
+
+DESKTOP
+- Priorizar 728x90.
+
+TABLET
+- Priorizar 728x90.
+
+MOBILE
+- Priorizar 320x50.
+- Utilizar 300x250 cuando exista espacio suficiente.
+
+OPTIMIZACIÓN
+
+- Implementar lazy loading para todos los anuncios.
+- Evitar Layout Shift (CLS).
+- Reservar espacio para banners antes de cargarlos.
+- No bloquear renderizado inicial.
+- No generar errores en consola.
+- Verificar desmontaje correcto de componentes al cambiar de página.
+
+PRE-PLAYER
+
+Cuando el usuario pulsa "Ver Ahora":
+
+1. Mostrar pantalla fullscreen.
+2. Fondo oscuro estilo Netflix.
+3. Imagen promocional configurable.
+4. Logo EnygmaCine.
+5. Texto:
+   "Preparando reproducción..."
+6. Barra de progreso animada.
+7. Duración aproximada de 3 segundos.
+8. Fade In.
+9. Fade Out.
+10. Cargar reproductor en segundo plano.
+11. Abrir reproductor automáticamente.
+
+IMPORTANTE
+
+- Mantener esta pantalla como pantalla de carga/promoción.
+- No presentarla como un anuncio de video real.
+- No mostrar contador de anuncio.
+- No mostrar mensajes engañosos.
+
+REPRODUCTOR
+
+- No mostrar anuncios sobre el video.
+- No interrumpir reproducción.
+- Mantener máxima velocidad de carga.
+
+ANALYTICS
+
+Agregar métricas para:
+
+- Ingreso a Home.
+- Visualización de detalle.
+- Clic en Ver Ahora.
+- Apertura de reproductor.
+- Tiempo de permanencia.
+- Errores de carga.
+
+REALIZAR REVISIÓN COMPLETA Y CORREGIR AUTOMÁTICAMENTE CUALQUIER PROBLEMA DETECTADO.
