@@ -31,46 +31,47 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       
-      - name: Install dependencies
+      - name: Install global dependencies
+        run: npm install -g @capacitor/cli
+      
+      - name: Install project dependencies
         run: pnpm install --frozen-lockfile
       
       - name: Build web
         run: pnpm --filter @workspace/enygma run build
       
-      - name: Setup Capacitor Android
+      - name: Setup Capacitor project
         run: |
           cd artifacts/enygma
-          pnpm add -D @capacitor/core @capacitor/cli @capacitor/android @capacitor/app
-          npx cap add android || true
-          npx cap copy
-          npx cap sync
+          cap add android || true
+          cap copy
+          cap sync
       
-      - name: Configure gradle
+      - name: Configure Gradle
         run: |
           mkdir -p ~/.gradle
-          echo "org.gradle.jvmargs=-Xmx4096m" > ~/.gradle/gradle.properties
+          echo "org.gradle.jvmargs=-Xmx2048m" > ~/.gradle/gradle.properties
           echo "org.gradle.parallel=true" >> ~/.gradle/gradle.properties
       
       - name: Build APK Debug
-        continue-on-error: true
         run: |
           cd artifacts/enygma/android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon -x lint
       
-      - name: Build APK Release
-        continue-on-error: true
-        run: |
-          cd artifacts/enygma/android
-          chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --stacktrace
-      
-      - name: Upload Artifacts
+      - name: Upload APK Debug
+        if: success()
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: enygma-apks
-          path: |
-            artifacts/enygma/android/app/build/outputs/apk/**/*.apk
-          if-no-files-found: warn
+          name: enygma-debug-apk
+          path: artifacts/enygma/android/app/build/outputs/apk/debug/*.apk
           retention-days: 30
+      
+      - name: Upload Build Logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: artifacts/enygma/android/build/reports/**
+          if-no-files-found: ignore
+
