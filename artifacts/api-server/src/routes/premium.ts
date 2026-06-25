@@ -15,17 +15,19 @@ import {
 const router = Router();
 
 // Middleware to check admin authentication
-const requireAdminAuth = (req: Request, res: Response, next: Function) => {
+const requireAdminAuth = (req: Request, res: Response, next: Function): void => {
   const authHeader = req.headers.authorization;
   const adminToken = process.env.ADMIN_TOKEN;
 
   if (!authHeader || !adminToken) {
-    return res.status(403).json({ error: "Admin authentication required" });
+    res.status(403).json({ error: "Admin authentication required" });
+    return;
   }
 
   const token = authHeader.replace("Bearer ", "");
   if (token !== adminToken) {
-    return res.status(403).json({ error: "Invalid admin token" });
+    res.status(403).json({ error: "Invalid admin token" });
+    return;
   }
 
   next();
@@ -35,21 +37,24 @@ const requireAdminAuth = (req: Request, res: Response, next: Function) => {
  * POST /api/premium/request
  * Create a new premium request
  */
-router.post("/request", async (req: Request, res: Response) => {
+router.post("/request", async (req: Request, res: Response): Promise<void> => {
   try {
     const { usuario, nombre, email, metodo_pago } = req.body;
 
     // Validation
     if (!usuario || typeof usuario !== "string" || usuario.trim() === "") {
-      return res.status(400).json({ error: "Invalid usuario field" });
+      res.status(400).json({ error: "Invalid usuario field" });
+      return;
     }
 
     if (!nombre || typeof nombre !== "string" || nombre.trim() === "") {
-      return res.status(400).json({ error: "Invalid nombre field" });
+      res.status(400).json({ error: "Invalid nombre field" });
+      return;
     }
 
     if (!metodo_pago || !["transferencia", "crypto"].includes(metodo_pago)) {
-      return res.status(400).json({ error: "Invalid metodo_pago field" });
+      res.status(400).json({ error: "Invalid metodo_pago field" });
+      return;
     }
 
     const result = await handlePremiumRequest({
@@ -71,12 +76,13 @@ router.post("/request", async (req: Request, res: Response) => {
  * GET /api/premium/status
  * Get premium status for current user
  */
-router.get("/status", async (req: Request, res: Response) => {
+router.get("/status", async (req: Request, res: Response): Promise<void> => {
   try {
     const usuario = (req.query.usuario as string) || "";
 
     if (!usuario) {
-      return res.status(400).json({ error: "usuario query parameter required" });
+      res.status(400).json({ error: "usuario query parameter required" });
+      return;
     }
 
     const status = await handleGetPremiumStatus(usuario);
@@ -92,12 +98,13 @@ router.get("/status", async (req: Request, res: Response) => {
  * PUT /api/premium/approve
  * Admin: Approve a premium request
  */
-router.put("/approve", requireAdminAuth, async (req: Request, res: Response) => {
+router.put("/approve", requireAdminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const { usuario, adminUser } = req.body;
 
     if (!usuario) {
-      return res.status(400).json({ error: "usuario field required" });
+      res.status(400).json({ error: "usuario field required" });
+      return;
     }
 
     await handlePremiumApproval(usuario, adminUser || "unknown");
@@ -113,12 +120,13 @@ router.put("/approve", requireAdminAuth, async (req: Request, res: Response) => 
  * PUT /api/premium/reject
  * Admin: Reject a premium request
  */
-router.put("/reject", requireAdminAuth, async (req: Request, res: Response) => {
+router.put("/reject", requireAdminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const { usuario } = req.body;
 
     if (!usuario) {
-      return res.status(400).json({ error: "usuario field required" });
+      res.status(400).json({ error: "usuario field required" });
+      return;
     }
 
     await handlePremiumRejection(usuario);
@@ -134,16 +142,18 @@ router.put("/reject", requireAdminAuth, async (req: Request, res: Response) => {
  * PUT /api/premium/toggle-ads
  * Admin: Toggle ads for a user
  */
-router.put("/toggle-ads", requireAdminAuth, async (req: Request, res: Response) => {
+router.put("/toggle-ads", requireAdminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const { usuario, sinPublicidades } = req.body;
 
     if (!usuario) {
-      return res.status(400).json({ error: "usuario field required" });
+      res.status(400).json({ error: "usuario field required" });
+      return;
     }
 
     if (typeof sinPublicidades !== "boolean") {
-      return res.status(400).json({ error: "sinPublicidades must be boolean" });
+      res.status(400).json({ error: "sinPublicidades must be boolean" });
+      return;
     }
 
     await handleToggleAds(usuario, sinPublicidades);
@@ -162,7 +172,7 @@ router.put("/toggle-ads", requireAdminAuth, async (req: Request, res: Response) 
  * GET /api/premium/list
  * Admin: List all pending requests and approved users
  */
-router.get("/list", requireAdminAuth, async (req: Request, res: Response) => {
+router.get("/list", requireAdminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const pending = await handleListPendingRequests();
     const approved = await handleListApprovedUsers();
@@ -183,12 +193,13 @@ router.get("/list", requireAdminAuth, async (req: Request, res: Response) => {
  * DELETE /api/premium/remove
  * Admin: Remove premium access from user
  */
-router.delete("/remove", requireAdminAuth, async (req: Request, res: Response) => {
+router.delete("/remove", requireAdminAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const { usuario } = req.body;
 
     if (!usuario) {
-      return res.status(400).json({ error: "usuario field required" });
+      res.status(400).json({ error: "usuario field required" });
+      return;
     }
 
     await handleRemovePremium(usuario);

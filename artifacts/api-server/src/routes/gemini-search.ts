@@ -61,7 +61,7 @@ Sé conciso y preciso.`;
       };
     }
 
-    const data = await response.json();
+    const data = await response.json() as any;
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
     try {

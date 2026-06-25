@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState, useCallback, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/query-client";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ProfileProvider } from "@/lib/profile-context";
@@ -25,18 +26,6 @@ const AdminSearch = lazy(() => import("@/pages/admin-search"));
 const MyList = lazy(() => import("@/pages/mylist"));
 const Premium = lazy(() => import("@/pages/premium"));
 const NotFound = lazy(() => import("@/pages/not-found"));
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 30 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      retry: 1,
-    },
-  },
-});
 
 const PageFallback = () => (
   <div className="w-full h-screen bg-black flex items-center justify-center">
