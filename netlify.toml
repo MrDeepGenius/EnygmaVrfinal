@@ -1,0 +1,17 @@
+[build]
+command = "pnpm install --frozen-lockfile && pnpm --filter @workspace/enygma run build"
+publish = "artifacts/enygma/dist/public"
+
+[build.environment]
+NODE_VERSION = "20"
+
+[[redirects]]
+from = "/api/*"
+to = "http://192.168.100.18:8080/api/:splat"
+status = 200
+force = true
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
