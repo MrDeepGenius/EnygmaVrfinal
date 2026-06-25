@@ -74,6 +74,13 @@ export default defineConfig(async ({ command }) => {
         strict: true,
       },
       middlewareMode: false,
+      proxy: {
+        "/api": {
+          target: "http://localhost:8080",
+          changeOrigin: true,
+          secure: false,
+        },
+      },
       // Fallback para SPA: cualquier ruta no encontrada vuelve a index.html
       middleware: [
         // Middleware simple para SPA fallback
