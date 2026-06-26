@@ -6,7 +6,7 @@ interface AdminLoginProps {
   onAuthenticate: () => void;
 }
 
-const ADMIN_PASSWORD = "GabiTeamo2626!!";
+const ADMIN_PASSWORD = "GABITEAMO1234!";
 
 export function AdminLogin({ onAuthenticate }: AdminLoginProps) {
   const [password, setPassword] = useState("");
