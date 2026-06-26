@@ -1,4 +1,5 @@
 import { Link, useLocation } from "wouter";
+import { AdSocialBar } from "@/components/ad-social-bar";
 import { Search, User, Download, SmartphoneNfc, Heart, Home, Film, Tv, Music } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useProfile } from "@/lib/profile-context";
@@ -79,6 +80,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <AdSocialBar />
       {/* Top Header */}
       <header
         className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-500 ${

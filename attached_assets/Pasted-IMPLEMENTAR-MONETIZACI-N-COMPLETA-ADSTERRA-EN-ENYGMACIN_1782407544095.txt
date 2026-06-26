@@ -1,0 +1,219 @@
+IMPLEMENTAR MONETIZACIÓN COMPLETA ADSTERRA EN ENYGMACINE
+
+OBJETIVO:
+Integrar anuncios Adsterra de forma responsive en PC, Tablet y Mobile manteniendo una experiencia premium tipo Netflix.
+
+====================================================
+SOCIAL BAR GLOBAL
+====================================================
+
+Cargar una sola vez al iniciar la aplicación.
+
+SCRIPT:
+
+<script src="https://pl29330305.effectivecpmnetwork.com/45/0b/a7/450ba794fa0a1424a6370d8e5612d3d8.js"></script>
+
+REQUISITOS:
+- Cargar únicamente una vez por sesión.
+- No duplicar el script al navegar.
+- Inicializar desde el Layout principal o App principal.
+- Mantener activo en toda la aplicación.
+
+====================================================
+BANNER DESKTOP/TABLET 728x90
+====================================================
+
+<script>
+atOptions = {
+'key' : '862944febd24dd376950cafd83ec2ba0',
+'format' : 'iframe',
+'height' : 90,
+'width' : 728,
+'params' : {}
+};
+</script>
+
+<script src="https://www.highperformanceformat.com/862944febd24dd376950cafd83ec2ba0/invoke.js"></script>
+
+====================================================
+BANNER MOBILE 320x50
+====================================================
+
+<script>
+atOptions = {
+'key' : 'd9d8fecc362ff648676f69c9527b6547',
+'format' : 'iframe',
+'height' : 50,
+'width' : 320,
+'params' : {}
+};
+</script>
+
+<script src="https://www.highperformanceformat.com/d9d8fecc362ff648676f69c9527b6547/invoke.js"></script>
+
+====================================================
+BANNER RECTANGULAR 300x250
+====================================================
+
+<script>
+atOptions = {
+'key' : 'f5f4ca574261d74313928a9fb765d304',
+'format' : 'iframe',
+'height' : 250,
+'width' : 300,
+'params' : {}
+};
+</script>
+
+<script src="https://www.highperformanceformat.com/f5f4ca574261d74313928a9fb765d304/invoke.js"></script>
+
+====================================================
+UBICACIONES
+====================================================
+
+HOME
+
+- Insertar banner después de Tendencias.
+- Insertar banner después de Series.
+
+PC/TABLET:
+728x90
+
+MOBILE:
+320x50
+
+Si existe espacio suficiente:
+300x250
+
+----------------------------------------------------
+
+ANIME
+
+- Insertar banner entre bloques de contenido.
+
+PC/TABLET:
+728x90
+
+MOBILE:
+320x50
+
+----------------------------------------------------
+
+SERIES
+
+- Insertar banner entre bloques de contenido.
+
+PC/TABLET:
+728x90
+
+MOBILE:
+320x50
+
+----------------------------------------------------
+
+PELÍCULAS
+
+- Insertar banner entre bloques de contenido.
+
+PC/TABLET:
+728x90
+
+MOBILE:
+320x50
+
+----------------------------------------------------
+
+PERFIL
+
+- Insertar banner debajo de la información del usuario.
+
+Priorizar:
+300x250
+
+Fallback:
+728x90
+
+----------------------------------------------------
+
+DETALLE
+
+Ubicación:
+
+Poster
+Información
+Sinopsis
+
+[BANNER]
+
+Botón Ver Ahora
+
+Priorizar:
+300x250
+
+Fallback:
+728x90
+
+====================================================
+PANTALLA DE CARGA PRE PLAYER
+====================================================
+
+Cuando el usuario pulse VER AHORA:
+
+1. Mostrar overlay fullscreen.
+2. Fondo oscuro estilo Netflix.
+3. Imagen promocional configurable mediante URL.
+4. Logo EnygmaCine.
+5. Texto:
+
+"Preparando reproducción..."
+
+6. Barra de progreso animada.
+7. Duración 3 segundos.
+8. Fade In.
+9. Fade Out.
+10. Cargar reproductor en segundo plano.
+11. Abrir reproductor automáticamente.
+
+Diseño:
+
++--------------------------------+
+|                                |
+|        IMAGEN 16:9             |
+|                                |
+|                                |
+|    Preparando reproducción     |
+|                                |
+|   ██████████░░░░░░░░░░░░       |
+|                                |
++--------------------------------+
+
+IMPORTANTE:
+
+- No mostrar mensajes engañosos.
+- No indicar "Anuncio 1 de 1".
+- No mostrar contador falso.
+- Presentar la pantalla como carga/promoción.
+
+====================================================
+OPTIMIZACIÓN
+====================================================
+
+- Lazy load para todos los anuncios.
+- Evitar Layout Shift.
+- Reservar espacio para banners.
+- Compatible con React.
+- Compatible con Vite.
+- Compatible con Replit.
+- Compatible con Mobile.
+- Compatible con Tablet.
+- Compatible con Desktop.
+
+====================================================
+REPRODUCTOR
+====================================================
+
+- Nunca mostrar anuncios encima del video.
+- Nunca interrumpir la reproducción.
+- Mantener máxima velocidad de carga.
+
+REVISAR TODA LA IMPLEMENTACIÓN Y CORREGIR AUTOMÁTICAMENTE CUALQUIER ERROR DETECTADO.

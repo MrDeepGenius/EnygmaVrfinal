@@ -1,4 +1,5 @@
 import { useListSeries, useGetTmdbDetails, getGetTmdbDetailsQueryKey } from "@workspace/api-client-react";
+import { AdBannerSlot } from "@/components/ad-banner";
 import { useProfile } from "@/lib/profile-context";
 import { Layout } from "@/components/layout";
 import { PosterCard } from "@/components/poster-card";
@@ -189,6 +190,8 @@ export default function SeriesPage() {
   return (
     <Layout>
       {!isLoading && allRaw.length > 0 && <SectionHero items={allRaw} />}
+
+      <AdBannerSlot className="px-4 md:px-10 pt-2" />
 
       <div className="max-w-screen-2xl mx-auto px-3 md:px-10 lg:px-16 xl:px-20 py-6 bg-black">
         {isLoading ? (

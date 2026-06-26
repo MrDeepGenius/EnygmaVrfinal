@@ -1,4 +1,5 @@
 import { useListAnime, useGetTmdbDetails, getGetTmdbDetailsQueryKey } from "@workspace/api-client-react";
+import { AdBannerSlot } from "@/components/ad-banner";
 import { useProfile } from "@/lib/profile-context";
 import { Layout } from "@/components/layout";
 import { PosterCard } from "@/components/poster-card";
@@ -233,6 +234,9 @@ export default function AnimePage() {
             </motion.div>
           </div>
         )}
+
+        {/* Banner entre secciones */}
+        <AdBannerSlot className="px-4 md:px-10 pb-2" />
 
         {/* Grid */}
         <div className="max-w-screen-2xl mx-auto px-4 md:px-10 lg:px-16 xl:px-20 pb-8 bg-black">

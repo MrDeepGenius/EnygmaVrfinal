@@ -1,4 +1,5 @@
 import { useGetHomeContent, useListMovies, useListSeries, useListAnime } from "@workspace/api-client-react";
+import { AdBannerSlot } from "@/components/ad-banner";
 import { useProfile } from "@/lib/profile-context";
 import { useFavorites } from "@/lib/use-favorites";
 import { Layout } from "@/components/layout";
@@ -222,6 +223,9 @@ export default function Home() {
           />
         )}
 
+        {/* ── Banner después de Tendencias ── */}
+        <AdBannerSlot className="px-4 md:px-10" />
+
         {/* ── Series: Atrapados en la Pantalla ── */}
         {allSeries.length > 0 && (
           <HorizontalRow
@@ -231,6 +235,9 @@ export default function Home() {
             variant="portrait"
           />
         )}
+
+        {/* ── Banner después de Series ── */}
+        <AdBannerSlot className="px-4 md:px-10" />
 
         {/* ── Noches de Terror ── */}
         {horrorMovies.length > 0 && (

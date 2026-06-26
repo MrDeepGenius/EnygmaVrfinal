@@ -13,6 +13,8 @@ import { TrailerModal } from "@/components/trailer-modal";
 import { StreamingPlatforms } from "@/components/streaming-platforms";
 import { ReportButton } from "@/components/report-button";
 import { useFavorites } from "@/lib/use-favorites";
+import { AdBannerSlot } from "@/components/ad-banner";
+import { PrePlayer } from "@/components/pre-player";
 
 const LANG_NAMES: Record<string, string> = {
   en: "Inglés", es: "Español", fr: "Francés", de: "Alemán",
@@ -32,6 +34,7 @@ export default function SeriesDetail() {
   const [seasonOpen, setSeasonOpen] = useState(false);
   const [fallbackSearched, setFallbackSearched] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [prePlayerHref, setPrePlayerHref] = useState<string | null>(null);
 
   useEffect(() => { window.scrollTo(0, 0); }, [id]);
 
@@ -183,6 +186,11 @@ export default function SeriesDetail() {
   return (
     <div className="bg-black min-h-screen text-white">
 
+      {/* Pre-player overlay */}
+      {prePlayerHref && (
+        <PrePlayer href={prePlayerHref} onCancel={() => setPrePlayerHref(null)} />
+      )}
+
       {/* ── HERO ── */}
       <div className="relative w-full">
         <div className="relative w-full" style={{ height: "56vw", maxHeight: "420px", minHeight: "260px" }}>
@@ -244,12 +252,13 @@ export default function SeriesDetail() {
       {/* ── ACTIONS ── */}
       <div className="px-4 pb-4 space-y-2">
         {/* Ver T1 E1 */}
-        <Link href={`/watch/${type}/${series.id}`} className="block">
-          <button className="w-full flex items-center justify-center gap-2 py-3 bg-white hover:bg-white/90 text-black font-bold rounded-md text-[15px] transition-colors">
-            <Play className="w-5 h-5 fill-black" />
-            {firstEp ? `Ver T${activeSeason} E${firstEp.episodio || "1"}` : "Ver ahora"}
-          </button>
-        </Link>
+        <button
+          onClick={() => setPrePlayerHref(`/watch/${type}/${series.id}`)}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-white hover:bg-white/90 text-black font-bold rounded-md text-[15px] transition-colors"
+        >
+          <Play className="w-5 h-5 fill-black" />
+          {firstEp ? `Ver T${activeSeason} E${firstEp.episodio || "1"}` : "Ver ahora"}
+        </button>
 
         {/* Icon actions */}
         <div className="flex items-start justify-around pt-2">
@@ -287,6 +296,9 @@ export default function SeriesDetail() {
           <p className="text-[13px] text-white/80 leading-relaxed">{series.sinopsis}</p>
         </div>
       )}
+
+      {/* ── BANNER ── */}
+      <AdBannerSlot variant="rect" className="px-4 pb-2" />
 
       {/* ── DISPONIBLE EN ── */}
       {watchProviders.length > 0 && (

@@ -9,6 +9,8 @@ import { TrailerModal } from "@/components/trailer-modal";
 import { StreamingPlatforms } from "@/components/streaming-platforms";
 import { ReportButton } from "@/components/report-button";
 import { useState, useMemo, useEffect } from "react";
+import { AdBannerSlot } from "@/components/ad-banner";
+import { PrePlayer } from "@/components/pre-player";
 import { useFavorites } from "@/lib/use-favorites";
 
 const LANG_NAMES: Record<string, string> = {
@@ -28,6 +30,7 @@ function formatRuntime(mins: number) {
 export default function MovieDetail() {
   const [, params] = useRoute("/detail/movie/:id");
   const id = params?.id;
+  const [prePlayerHref, setPrePlayerHref] = useState<string | null>(null);
   const isTmdbId = id?.startsWith("tmdb_movie_");
   const [fallbackSearched, setFallbackSearched] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -228,15 +231,21 @@ export default function MovieDetail() {
         </div>
       </div>
 
+      {/* Pre-player overlay */}
+      {prePlayerHref && (
+        <PrePlayer href={prePlayerHref} onCancel={() => setPrePlayerHref(null)} />
+      )}
+
       {/* ── ACTIONS ── */}
       <div className="px-4 pb-4 space-y-2">
         {/* Ver ahora */}
-        <Link href={`/watch/movie/${movie.id}`} className="block">
-          <button className="w-full flex items-center justify-center gap-2 py-3 bg-white hover:bg-white/90 text-black font-bold rounded-md text-[15px] transition-colors">
-            <Play className="w-5 h-5 fill-black" />
-            Ver ahora
-          </button>
-        </Link>
+        <button
+          onClick={() => setPrePlayerHref(`/watch/movie/${movie.id}`)}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-white hover:bg-white/90 text-black font-bold rounded-md text-[15px] transition-colors"
+        >
+          <Play className="w-5 h-5 fill-black" />
+          Ver ahora
+        </button>
 
         {/* Icon actions row */}
         <div className="flex items-start justify-around pt-2">
@@ -280,6 +289,9 @@ export default function MovieDetail() {
           <p className="text-[13px] text-white/80 leading-relaxed">{movie.sinopsis}</p>
         </div>
       )}
+
+      {/* ── BANNER ── */}
+      <AdBannerSlot variant="rect" className="px-4 pb-2" />
 
       {/* ── DISPONIBLE EN ── */}
       {watchProviders.length > 0 && (
