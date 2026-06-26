@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { AdBannerSlot } from "@/components/ad-banner";
 
 interface PrePlayerProps {
   href: string;          // ruta destino (/watch/...)
   onCancel: () => void;
 }
 
-const PROMO_IMAGE = "https://image.tmdb.org/t/p/w1280/bq28ajZaoMyzEIm6REelqyqtEDZ.jpg"; // fallback genérico
+const DURATION = 5000; // ms — tiempo suficiente para que el ad cargue
 
 export function PrePlayer({ href, onCancel }: PrePlayerProps) {
   const [progress, setProgress] = useState(0);
@@ -14,20 +15,17 @@ export function PrePlayer({ href, onCancel }: PrePlayerProps) {
   const [, setLocation]         = useLocation();
 
   useEffect(() => {
-    // Fade in
     const t0 = setTimeout(() => setPhase("hold"), 80);
 
-    // Progress bar: 0→100 en 3 s
     const start = Date.now();
     const interval = setInterval(() => {
-      const p = Math.min(((Date.now() - start) / 3000) * 100, 100);
+      const p = Math.min(((Date.now() - start) / DURATION) * 100, 100);
       setProgress(p);
       if (p >= 100) clearInterval(interval);
     }, 30);
 
-    // Fade out + navigate
-    const t1 = setTimeout(() => setPhase("out"), 2700);
-    const t2 = setTimeout(() => setLocation(href), 3200);
+    const t1 = setTimeout(() => setPhase("out"), DURATION - 400);
+    const t2 = setTimeout(() => setLocation(href), DURATION + 100);
 
     return () => {
       clearTimeout(t0); clearTimeout(t1); clearTimeout(t2);
@@ -37,40 +35,42 @@ export function PrePlayer({ href, onCancel }: PrePlayerProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black gap-4 px-4"
       style={{
         opacity:    phase === "out" ? 0 : phase === "in" ? 0 : 1,
-        transition: phase === "out" ? "opacity 0.5s ease" : phase === "hold" ? "opacity 0.3s ease" : "none",
+        transition: phase === "out" ? "opacity 0.4s ease" : phase === "hold" ? "opacity 0.3s ease" : "none",
       }}
-      onClick={onCancel}
+      onClick={(e) => {
+        // sólo cancelar si no se hizo click dentro del banner
+        if ((e.target as HTMLElement).closest(".ad-pre-slot")) return;
+        onCancel();
+      }}
     >
-      {/* Promo image */}
-      <div className="relative w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-2xl">
-        <img
-          src={PROMO_IMAGE}
-          alt="Preparando..."
-          className="w-full h-full object-cover"
+      {/* ── Título ── */}
+      <p className="text-white/60 text-sm font-medium tracking-wide">
+        Preparando reproducción...
+      </p>
+
+      {/* ── Barra de progreso ── */}
+      <div className="w-full max-w-sm h-1 bg-white/15 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-white rounded-full"
+          style={{ width: `${progress}%`, transition: "width 0.03s linear" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-        {/* Logo */}
-        <div className="absolute top-4 left-4">
-          <img src="/enygma-logo.png" alt="ENYGMA" className="h-10 w-10 rounded-xl shadow-lg" />
-        </div>
-
-        {/* Texto + barra */}
-        <div className="absolute bottom-6 left-6 right-6">
-          <p className="text-white text-base font-semibold mb-3 tracking-wide">
-            Preparando reproducción...
-          </p>
-          <div className="h-1 w-full bg-white/20 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-white rounded-full transition-all"
-              style={{ width: `${progress}%`, transition: "width 0.03s linear" }}
-            />
-          </div>
-        </div>
       </div>
+
+      {/* ── Banner Adsterra 300×250 ── */}
+      <div className="ad-pre-slot" onClick={(e) => e.stopPropagation()}>
+        <AdBannerSlot variant="rect" />
+      </div>
+
+      {/* ── Saltar ── */}
+      <button
+        onClick={onCancel}
+        className="text-white/35 text-xs underline underline-offset-2 hover:text-white/60 transition-colors mt-1"
+      >
+        Saltar
+      </button>
     </div>
   );
 }
