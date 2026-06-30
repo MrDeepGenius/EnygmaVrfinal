@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig(async ({ command }) => {
   // Defaults seguros para build (producción) y para entornos donde no pasás env vars.
@@ -28,7 +27,6 @@ export default defineConfig(async ({ command }) => {
     plugins: [
       react(),
       tailwindcss(),
-      runtimeErrorOverlay(),
       ...extraReplitPlugins,
     ],
     resolve: {
@@ -80,16 +78,6 @@ export default defineConfig(async ({ command }) => {
           secure: false,
         },
       },
-      // Fallback para SPA: cualquier ruta no encontrada vuelve a index.html
-      middleware: [
-        // Middleware simple para SPA fallback
-        (req, res, next) => {
-          if (req.method === 'GET' && !req.url.startsWith('/api') && !req.url.includes('.')) {
-            req.url = '/';
-          }
-          next?.();
-        },
-      ],
     },
     preview: {
       // preview usa el mismo puerto
