@@ -703,13 +703,20 @@ export async function getHomeContent(profile?: string): Promise<{
 
   // Banner: pinned titles always appear first, in order
   const PINNED_BANNER_TITLES = [
+    "el dia de la revelacion",
+    "supergirl",
     "scary movie",
     "te van a matar",
     "toy story 5",
     "extreme makeover",
   ];
 
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
+  const normalize = (s: string) =>
+    s.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9 ]/g, "")
+      .trim();
 
   const pinnedMovies: Movie[] = [];
   for (const title of PINNED_BANNER_TITLES) {

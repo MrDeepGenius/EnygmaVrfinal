@@ -64,6 +64,7 @@ export default function Home() {
   );
 
   const top10Series = useMemo(() => allSeries.slice(0, 10), [allSeries]);
+  const top10Anime  = useMemo(() => allAnime.slice(0, 10),  [allAnime]);
 
   const byGenre = useMemo(() => (keywords: string[]) =>
     allMovies.filter((m) => {
@@ -72,14 +73,18 @@ export default function Home() {
       return keywords.some((k) => g.includes(k));
     }), [allMovies]);
 
-  const actionMovies  = useMemo(() => seededShuffle(byGenre(["acción","action","aventura","adventure","thriller"]), epoch ^ 1), [byGenre]);
-  const horrorMovies  = useMemo(() => seededShuffle(byGenre(["terror","horror","suspenso","suspense","miedo"]), epoch ^ 2), [byGenre]);
-  const comedyMovies  = useMemo(() => seededShuffle(byGenre(["comedia","comedy","humor"]), epoch ^ 3), [byGenre]);
-  const fantasyMovies = useMemo(() => seededShuffle(byGenre(["fantasía","fantasy","magia","animación","animation","infantil","familia","family"]), epoch ^ 4), [byGenre]);
-  const crimeMovies   = useMemo(() => seededShuffle(byGenre(["crimen","crime","misterio","mystery","policial"]), epoch ^ 5), [byGenre]);
-  const romanceMovies = useMemo(() => seededShuffle(byGenre(["romance","romántico","romantic","amor"]), epoch ^ 6), [byGenre]);
-  const scifiMovies   = useMemo(() => seededShuffle(byGenre(["ciencia ficción","sci-fi","scifi","science fiction","ciencia"]), epoch ^ 7), [byGenre]);
-  const dramaMovies   = useMemo(() => seededShuffle(byGenre(["drama"]), epoch ^ 8), [byGenre]);
+  const actionMovies     = useMemo(() => seededShuffle(byGenre(["acción","action","aventura","adventure","thriller"]), epoch ^ 1), [byGenre]);
+  const horrorMovies     = useMemo(() => seededShuffle(byGenre(["terror","horror","suspenso","suspense","miedo"]), epoch ^ 2), [byGenre]);
+  const comedyMovies     = useMemo(() => seededShuffle(byGenre(["comedia","comedy","humor"]), epoch ^ 3), [byGenre]);
+  const fantasyMovies    = useMemo(() => seededShuffle(byGenre(["fantasía","fantasy","magia","animación","animation","infantil","familia","family"]), epoch ^ 4), [byGenre]);
+  const crimeMovies      = useMemo(() => seededShuffle(byGenre(["crimen","crime","misterio","mystery","policial"]), epoch ^ 5), [byGenre]);
+  const romanceMovies    = useMemo(() => seededShuffle(byGenre(["romance","romántico","romantic","amor"]), epoch ^ 6), [byGenre]);
+  const scifiMovies      = useMemo(() => seededShuffle(byGenre(["ciencia ficción","sci-fi","scifi","science fiction","ciencia"]), epoch ^ 7), [byGenre]);
+  const dramaMovies      = useMemo(() => seededShuffle(byGenre(["drama"]), epoch ^ 8), [byGenre]);
+  const superheroMovies  = useMemo(() => seededShuffle(byGenre(["superhéroe","superheroe","superhero","marvel","dc","cómic","comic"]), epoch ^ 9), [byGenre]);
+  const docMovies        = useMemo(() => seededShuffle(byGenre(["documental","documentary","biográfico","biografía","biopic"]), epoch ^ 10), [byGenre]);
+  const westernMovies    = useMemo(() => seededShuffle(byGenre(["western","oeste","vaquero"]), epoch ^ 11), [byGenre]);
+  const warMovies        = useMemo(() => seededShuffle(byGenre(["guerra","war","bélico","militar"]), epoch ^ 12), [byGenre]);
 
   if (isLoading) {
     return (
@@ -117,9 +122,11 @@ export default function Home() {
     );
   }
 
-  const bannerItems  = content.banner       || [];
-  const top10Items   = content.top10        || [];
-  const latestMovies = content.latestMovies || [];
+  const bannerItems   = content.banner        || [];
+  const top10Items    = content.top10         || [];
+  const latestMovies  = content.latestMovies  || [];
+  const latestSeries  = content.latestSeries  || [];
+  const latestAnime   = content.latestAnime   || [];
 
   return (
     <Layout>
@@ -202,6 +209,17 @@ export default function Home() {
           />
         )}
 
+        {/* ── Top 10 Anime ── */}
+        {top10Anime.length > 0 && (
+          <TopTenRanking
+            items={top10Anime as any}
+            title="Top 10 Anime"
+            type="anime"
+            accentColor="#7B2FBE"
+            shadowColor="rgba(123,47,190,0.45)"
+          />
+        )}
+
         {/* ── Top 10 (home API) ── */}
         {top10Items.length > 0 && (
           <TopTenRanking
@@ -223,8 +241,28 @@ export default function Home() {
           />
         )}
 
+        {/* ── Héroes y Villanos (Superhéroes) ── */}
+        {superheroMovies.length > 0 && (
+          <HorizontalRow
+            title="Héroes y Villanos"
+            items={superheroMovies}
+            type="movie"
+            variant="portrait"
+          />
+        )}
+
         {/* ── Banner después de Tendencias ── */}
         <AdBannerSlot className="px-4 md:px-10" />
+
+        {/* ── Series Recientes ── */}
+        {latestSeries.length > 0 && (
+          <HorizontalRow
+            title="Series Recientes"
+            items={latestSeries as any}
+            type="serie"
+            variant="landscape"
+          />
+        )}
 
         {/* ── Series: Atrapados en la Pantalla ── */}
         {allSeries.length > 0 && (
@@ -249,7 +287,17 @@ export default function Home() {
           />
         )}
 
-        {/* ── Anime: El Mundo del Anime ── */}
+        {/* ── Anime Recientes ── */}
+        {latestAnime.length > 0 && (
+          <HorizontalRow
+            title="Anime Recientes"
+            items={latestAnime as any}
+            type="anime"
+            variant="landscape"
+          />
+        )}
+
+        {/* ── El Mundo del Anime ── */}
         {allAnime.length > 0 && (
           <HorizontalRow
             title="El Mundo del Anime"
@@ -314,6 +362,36 @@ export default function Home() {
           <HorizontalRow
             title="Historias que Trascienden"
             items={dramaMovies}
+            type="movie"
+            variant="portrait"
+          />
+        )}
+
+        {/* ── Documental: La Realidad Supera la Ficción ── */}
+        {docMovies.length > 0 && (
+          <HorizontalRow
+            title="La Realidad Supera la Ficción"
+            items={docMovies}
+            type="movie"
+            variant="portrait"
+          />
+        )}
+
+        {/* ── Western: Tierra de Forajidos ── */}
+        {westernMovies.length > 0 && (
+          <HorizontalRow
+            title="Tierra de Forajidos"
+            items={westernMovies}
+            type="movie"
+            variant="portrait"
+          />
+        )}
+
+        {/* ── Guerra: En el Frente de Batalla ── */}
+        {warMovies.length > 0 && (
+          <HorizontalRow
+            title="En el Frente de Batalla"
+            items={warMovies}
             type="movie"
             variant="portrait"
           />
