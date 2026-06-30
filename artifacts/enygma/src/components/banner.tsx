@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useGetTmdbDetails, getGetTmdbDetailsQueryKey } from "@workspace/api-client-react";
+import { useQueries } from "@tanstack/react-query";
+import { getTmdbDetails, getGetTmdbDetailsQueryKey } from "@workspace/api-client-react";
 import type { Movie } from "@workspace/api-client-react";
 
 interface BannerProps {
@@ -17,15 +18,25 @@ export function Banner({ items }: BannerProps) {
   const transitionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const displayItem = items[displayIndex] ?? items[0];
-  const tmdbType = displayItem?.categoria === "serie" || displayItem?.categoria === "anime" ? "tv" : "movie";
-  const tmdbParams = { tmdbId: displayItem?.id ?? "", type: tmdbType as "movie" | "tv" };
-  const { data: tmdb } = useGetTmdbDetails(tmdbParams, {
-    query: { enabled: !!displayItem?.id, queryKey: getGetTmdbDetailsQueryKey(tmdbParams) },
+  // Prefetch TMDB data for ALL banner items at once so logos are ready instantly
+  const tmdbQueries = useQueries({
+    queries: items.map((item) => {
+      const type = item.categoria === "serie" || item.categoria === "anime" ? "tv" : "movie";
+      const params = { tmdbId: item.id ?? "", type: type as "movie" | "tv" };
+      return {
+        queryKey: getGetTmdbDetailsQueryKey(params),
+        queryFn: () => getTmdbDetails(params),
+        enabled: !!item.id,
+        staleTime: 10 * 60 * 1000,
+      };
+    }),
   });
 
+  const displayItem = items[displayIndex] ?? items[0];
+  const tmdb = tmdbQueries[displayIndex]?.data;
+
   const logoSrc = displayItem?.logoUrl || tmdb?.logoPath || null;
-  
+
   // Optimized backdrop with blur-up effect
   const backdropUrl = displayItem?.backdropUrl || tmdb?.backdropPath;
   const blurHash = "L84d6Q"; // Simple CSS gradient blur effect
