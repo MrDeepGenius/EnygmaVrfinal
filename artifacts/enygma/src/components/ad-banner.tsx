@@ -49,7 +49,10 @@ export function AdBanner({ variant = "horizontal", className = "" }: AdBannerPro
     if (!container) return;
 
     enqueueAd(() => {
-      if (!container.isConnected) { drainAdQueue(); return; }
+      // Skip ad loading inside iframes (e.g. Replit artifact preview) —
+      // third-party ad scripts throw non-Error exceptions in sandboxed iframes.
+      const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
+      if (inIframe || !container.isConnected) { drainAdQueue(); return; }
 
       const isRect    = variant === "rect";
       const isDesktop = window.innerWidth >= 728;
