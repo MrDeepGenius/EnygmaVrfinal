@@ -10,17 +10,7 @@ export default defineConfig(async ({ command }) => {
   const port = Number(rawPort);
   const basePath = (process.env.BASE_PATH ?? "/").trim() || "/";
 
-  const extraReplitPlugins =
-    process.env.NODE_ENV !== "production" && process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer({
-              root: path.resolve(import.meta.dirname, ".."),
-            }),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) => m.devBanner()),
-        ]
-      : [];
+  const extraReplitPlugins: import("vite").Plugin[] = [];
 
   return {
     base: basePath,
