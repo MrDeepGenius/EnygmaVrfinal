@@ -519,6 +519,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Movie"
+        top10Series:
+          type: array
+          items:
+            $ref: "#/components/schemas/Movie"
         trending:
           type: array
           items:

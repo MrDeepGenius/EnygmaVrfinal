@@ -1,5 +1,17 @@
+import fs from "fs";
+import path from "path";
 import { logger } from "./logger";
 import { getLogoUrl, getTrendingMovies, getTopRatedMovies } from "./tmdb";
+
+function readAdminConfig(): Record<string, any> {
+  try {
+    const configPath = (process.env.ADMIN_CONFIG_PATH || "").trim()
+      || path.join(process.cwd(), "data", "admin-config.json");
+    return JSON.parse(fs.readFileSync(configPath, "utf-8"));
+  } catch {
+    return {};
+  }
+}
 
 function envUrl(name: string): string | null {
   const v = process.env[name];
@@ -597,6 +609,7 @@ export async function getAnimeById(
 export async function getHomeContent(profile?: string): Promise<{
   banner: Movie[];
   top10: Movie[];
+  top10Series: Movie[];
   trending: Movie[];
   recommended: Movie[];
   latestMovies: Movie[];
@@ -608,6 +621,7 @@ export async function getHomeContent(profile?: string): Promise<{
     | CacheEntry<{
         banner: Movie[];
         top10: Movie[];
+        top10Series: Movie[];
         trending: Movie[];
         recommended: Movie[];
         latestMovies: Movie[];
@@ -747,9 +761,63 @@ export async function getHomeContent(profile?: string): Promise<{
   // Banner: SOLO los títulos fijados, sin relleno adicional
   const banner: Movie[] = pinnedBanner;
 
+  const adminCfg = readAdminConfig();
+
+  const bannerItemToMovie = (item: any, cat: "movie" | "serie" | "anime" = "movie"): Movie => ({
+    id: item.id,
+    titulo: item.titulo,
+    sinopsis: null,
+    posterUrl: item.posterUrl || null,
+    backdropUrl: item.backdropUrl || null,
+    logoUrl: null,
+    urlReproduccion: null,
+    youtubeTrailer: null,
+    genero: null,
+    año: item.year || null,
+    actores: null,
+    vistas: null,
+    esVip: false,
+    enBanner: false,
+    tipo: null,
+    status: null,
+    valoracion: null,
+    categoria: cat as "movie",
+  });
+
+  const top10Auto = top10Unfiltered.length > 0 ? top10Unfiltered : allMovies.slice(0, 10);
+  const top10Final: Movie[] = adminCfg?.top10?.override && (adminCfg.top10.items as any[])?.length > 0
+    ? (adminCfg.top10.items as any[]).map((item) => bannerItemToMovie(item, "movie"))
+    : top10Auto;
+
+  const top10SeriesAuto: Movie[] = allSeries.slice(0, 10).map((s) => ({
+    id: s.id,
+    titulo: s.titulo,
+    sinopsis: s.sinopsis,
+    posterUrl: s.posterUrl,
+    backdropUrl: s.backdropUrl,
+    logoUrl: s.logoUrl,
+    urlReproduccion: null,
+    youtubeTrailer: s.youtubeTrailer,
+    genero: s.genero,
+    año: s.año,
+    actores: null,
+    vistas: null,
+    esVip: false,
+    enBanner: false,
+    tipo: null,
+    status: null,
+    valoracion: null,
+    categoria: "serie" as unknown as "movie",
+  }));
+
+  const top10SeriesFinal: Movie[] = adminCfg?.top10Series?.override && (adminCfg.top10Series.items as any[])?.length > 0
+    ? (adminCfg.top10Series.items as any[]).map((item) => bannerItemToMovie(item, "serie"))
+    : top10SeriesAuto;
+
   const result = {
     banner,
-    top10: top10Unfiltered.length > 0 ? top10Unfiltered : allMovies.slice(0, 10), // Fallback to profile-filtered movies from Sheets
+    top10: top10Final,
+    top10Series: top10SeriesFinal,
     trending: trending2,
     recommended: recommended.length > 0 ? recommended : latestMovies.slice(0, 20),
     latestMovies,

@@ -11,6 +11,7 @@ import type { Series } from './series';
 export interface HomeContent {
   banner: Movie[];
   top10: Movie[];
+  top10Series?: Movie[];
   trending: Movie[];
   recommended: Movie[];
   latestMovies: Movie[];

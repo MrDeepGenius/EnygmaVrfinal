@@ -34,6 +34,7 @@ interface CustomSection {
 interface AdminConfig {
   banner: { override: boolean; items: BannerItem[] };
   top10: { override: boolean; items: BannerItem[] };
+  top10Series: { override: boolean; items: BannerItem[] };
   hiddenSections: string[];
   customSections: CustomSection[];
 }
@@ -92,19 +93,26 @@ export default function Admin() {
   const [allCatalogItems, setAllCatalogItems] = useState<any[]>([]);
   const [selectedItemsForNewSection, setSelectedItemsForNewSection] = useState<any[]>([]);
 
-  // Drafts (Banner / Top10) + buscadores
+  // Drafts (Banner / Top10 / Top10Series) + buscadores
   const [bannerDraft, setBannerDraft] = useState<
     Partial<BannerItem> & { position?: number | "" }
   >({ tipo: "movie", position: "" });
   const [top10Draft, setTop10Draft] = useState<
     Partial<BannerItem> & { position?: number | "" }
   >({ tipo: "movie", position: "" });
+  const [top10SeriesDraft, setTop10SeriesDraft] = useState<
+    Partial<BannerItem> & { position?: number | "" }
+  >({ tipo: "serie", position: "" });
+
+  const [top10SubTab, setTop10SubTab] = useState<"movies" | "series">("movies");
 
   const [bannerNameQuery, setBannerNameQuery] = useState("");
   const [top10NameQuery, setTop10NameQuery] = useState("");
+  const [top10SeriesNameQuery, setTop10SeriesNameQuery] = useState("");
 
   const [bannerTmdbLoading, setBannerTmdbLoading] = useState(false);
   const [top10TmdbLoading, setTop10TmdbLoading] = useState(false);
+  const [top10SeriesTmdbLoading, setTop10SeriesTmdbLoading] = useState(false);
   const [bannerTmdbResults, setBannerTmdbResults] = useState<
     Array<{
       tmdbId: number;
@@ -127,13 +135,28 @@ export default function Admin() {
       overview?: string;
     }>
   >([]);
+  const [top10SeriesTmdbResults, setTop10SeriesTmdbResults] = useState<
+    Array<{
+      tmdbId: number;
+      titulo: string;
+      tipo: BannerItem["tipo"];
+      posterUrl: string | null;
+      backdropUrl: string | null;
+      year?: string;
+      overview?: string;
+    }>
+  >([]);
 
   const [bannerCatalogLoading, setBannerCatalogLoading] = useState(false);
   const [top10CatalogLoading, setTop10CatalogLoading] = useState(false);
+  const [top10SeriesCatalogLoading, setTop10SeriesCatalogLoading] = useState(false);
   const [bannerCatalogResults, setBannerCatalogResults] = useState<
     Array<{ id: string; titulo: string; tipo: BannerItem["tipo"]; posterUrl: string | null; año?: string | null }>
   >([]);
   const [top10CatalogResults, setTop10CatalogResults] = useState<
+    Array<{ id: string; titulo: string; tipo: BannerItem["tipo"]; posterUrl: string | null; año?: string | null }>
+  >([]);
+  const [top10SeriesCatalogResults, setTop10SeriesCatalogResults] = useState<
     Array<{ id: string; titulo: string; tipo: BannerItem["tipo"]; posterUrl: string | null; año?: string | null }>
   >([]);
 
@@ -257,12 +280,29 @@ export default function Admin() {
     }
   };
 
+  const selectCatalogItemForTop10Series = async (item: { id: string; titulo: string; tipo: BannerItem["tipo"] }) => {
+    try {
+      const details = await fetchContentDetails(item.tipo, item.id);
+      setTop10SeriesDraft((p) => ({
+        ...p,
+        id: item.id,
+        tipo: item.tipo,
+        titulo: details.titulo || item.titulo,
+        posterUrl: details.posterUrl ?? p.posterUrl ?? null,
+        backdropUrl: details.backdropUrl ?? p.backdropUrl ?? null,
+        year: details.año ?? p.year,
+      }));
+    } catch {
+      setTop10SeriesDraft((p) => ({ ...p, id: item.id, tipo: item.tipo, titulo: item.titulo }));
+    }
+  };
+
   useEffect(() => {
     fetch(`${BASE}/api/admin/config`)
       .then((r) => r.json())
       .then((d) => { setConfig(d); setSaved(true); })
       .catch(() => {
-        setConfig({ banner: { override: false, items: [] }, top10: { override: false, items: [] }, hiddenSections: [], customSections: [] });
+        setConfig({ banner: { override: false, items: [] }, top10: { override: false, items: [] }, top10Series: { override: false, items: [] }, hiddenSections: [], customSections: [] });
       });
 
     // Load all catalog items for collection builder
@@ -442,6 +482,34 @@ export default function Admin() {
 
   const removeTop10Item = (id: string) => {
     updateConfig((c) => ({ ...c, top10: { ...c.top10, items: c.top10.items.filter((i) => i.id !== id) } }));
+  };
+
+  const addTop10SeriesItem = () => {
+    if (!top10SeriesDraft.id || !top10SeriesDraft.titulo) return;
+    const item: BannerItem = {
+      id: top10SeriesDraft.id,
+      titulo: top10SeriesDraft.titulo,
+      tipo: (top10SeriesDraft.tipo as BannerItem["tipo"]) || "serie",
+      posterUrl: top10SeriesDraft.posterUrl || null,
+      backdropUrl: top10SeriesDraft.backdropUrl || null,
+      year: top10SeriesDraft.year,
+      tmdbId: top10SeriesDraft.tmdbId,
+    };
+    updateConfig((c) => ({
+      ...c,
+      top10Series: {
+        ...c.top10Series,
+        items: addItemAtPosition(c.top10Series.items, item, top10SeriesDraft.position, 10),
+      },
+    }));
+    setTop10SeriesDraft({ tipo: "serie", position: "" });
+    setTop10SeriesNameQuery("");
+    setTop10SeriesCatalogResults([]);
+    setTop10SeriesTmdbResults([]);
+  };
+
+  const removeTop10SeriesItem = (id: string) => {
+    updateConfig((c) => ({ ...c, top10Series: { ...c.top10Series, items: c.top10Series.items.filter((i) => i.id !== id) } }));
   };
 
   if (!authenticated) {
@@ -932,267 +1000,350 @@ export default function Admin() {
         {/* TOP 10 TAB */}
         {tab === "top10" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-bold mb-1">Top 10 en ENYGMA</h2>
-                <p className="text-white/40 text-sm">Controla manualmente qué aparece en el Top 10.</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-white/40 text-sm">{config.top10.override ? "Override activo" : "Automático"}</span>
-                <button
-                  onClick={() => updateConfig((c) => ({ ...c, top10: { ...c.top10, override: !c.top10.override } }))}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${config.top10.override ? "bg-[#7B2FBE]" : "bg-white/20"}`}
-                >
-                  <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${config.top10.override ? "translate-x-6" : "translate-x-0.5"}`} />
-                </button>
-              </div>
+            <div>
+              <h2 className="text-lg font-bold mb-1">Top 10 en ENYGMA</h2>
+              <p className="text-white/40 text-sm">Controla manualmente qué aparece en los Top 10 de Películas y Series.</p>
             </div>
 
-            {config.top10.override && (
+            {/* Sub-tabs */}
+            <div className="flex gap-1 bg-white/5 p-1 rounded-lg w-fit">
+              <button
+                onClick={() => setTop10SubTab("movies")}
+                className={`px-5 py-2 rounded-md text-sm font-semibold transition-all ${top10SubTab === "movies" ? "bg-[#E50914] text-white" : "text-white/50 hover:text-white"}`}
+              >
+                Top Películas
+              </button>
+              <button
+                onClick={() => setTop10SubTab("series")}
+                className={`px-5 py-2 rounded-md text-sm font-semibold transition-all ${top10SubTab === "series" ? "bg-[#0ea5e9] text-white" : "text-white/50 hover:text-white"}`}
+              >
+                Top Series
+              </button>
+            </div>
+
+            {/* ── TOP PELÍCULAS ── */}
+            {top10SubTab === "movies" && (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
-                  <div className="sm:col-span-2">
-                    <label className="text-xs text-white/40 mb-1 block">Nombre (buscá por título)</label>
-                    <input
-                      value={top10NameQuery}
-                      onChange={(e) => setTop10NameQuery(e.target.value)}
-                      placeholder="Ej: El Padrino, Friends, Naruto..."
-                      className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#7B2FBE]"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-white/40 mb-1 block">Tipo</label>
-                    <select
-                      value={top10Draft.tipo || "movie"}
-                      onChange={(e) => setTop10Draft((p) => ({ ...p, tipo: e.target.value as BannerItem["tipo"] }))}
-                      className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7B2FBE]"
-                    >
-                      <option value="movie">Película</option>
-                      <option value="serie">Serie</option>
-                      <option value="anime">Anime</option>
-                    </select>
-                  </div>
-
-                  <div className="sm:col-span-2 flex gap-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-white/40 text-sm">Fija las 10 películas del ranking. Activa el override para editar.</p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-white/40 text-sm">{config.top10.override ? "Override activo" : "Automático"}</span>
                     <button
-                      onClick={async () => {
-                        const q = top10NameQuery.trim();
-                        if (!q) return;
-                        setTop10TmdbLoading(true);
-                        setTop10TmdbResults([]);
-                        try {
-                          const results = await fetchTmdbSearch(q, (top10Draft.tipo as any) || "movie");
-                          setTop10TmdbResults(results);
-                        } finally {
-                          setTop10TmdbLoading(false);
-                        }
-                      }}
-                      disabled={top10TmdbLoading}
-                      className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                      title="Buscar por nombre en TMDB"
+                      onClick={() => updateConfig((c) => ({ ...c, top10: { ...c.top10, override: !c.top10.override } }))}
+                      className={`relative w-12 h-6 rounded-full transition-colors ${config.top10.override ? "bg-[#E50914]" : "bg-white/20"}`}
                     >
-                      {top10TmdbLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                      Buscar en TMDB
-                    </button>
-                    <button
-                      onClick={async () => {
-                        const q = top10NameQuery.trim();
-                        if (!q) return;
-                        setTop10CatalogLoading(true);
-                        setTop10CatalogResults([]);
-                        try {
-                          const results = await fetchCatalogSearch(q);
-                          setTop10CatalogResults(results);
-                        } finally {
-                          setTop10CatalogLoading(false);
-                        }
-                      }}
-                      disabled={top10CatalogLoading}
-                      className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                      title="Busca dentro de tu catálogo (Google Sheets)"
-                    >
-                      {top10CatalogLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                      Buscar en Catálogo
-                    </button>
-                  </div>
-
-                  <div>
-                    <label className="text-xs text-white/40 mb-1 block">Posición (1-10)</label>
-                    <input
-                      type="number"
-                      min={1}
-                      max={10}
-                      value={top10Draft.position ?? ""}
-                      onChange={(e) => {
-                        const v = e.target.value === "" ? "" : Math.max(1, Math.min(10, Number(e.target.value)));
-                        setTop10Draft((p) => ({ ...p, position: v }));
-                      }}
-                      placeholder="Ej: 1"
-                      className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#7B2FBE]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs text-white/40 mb-1 block">ID interno (Sheets)</label>
-                    <input
-                      value={top10Draft.id || ""}
-                      onChange={(e) => setTop10Draft((p) => ({ ...p, id: e.target.value }))}
-                      placeholder="Ej: id_unico / id..."
-                      className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#7B2FBE]"
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <label className="text-xs text-white/40 mb-1 block">Título</label>
-                    <input
-                      value={top10Draft.titulo || ""}
-                      onChange={(e) => setTop10Draft((p) => ({ ...p, titulo: e.target.value }))}
-                      placeholder="Se completa solo cuando elegís un resultado"
-                      className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#7B2FBE]"
-                    />
-                  </div>
-
-                  <div className="sm:col-span-3">
-                    <button
-                      onClick={addTop10Item}
-                      disabled={!top10Draft.id || !top10Draft.titulo || top10Draft.id.startsWith("tmdb_movie_")}
-                      title={top10Draft.id?.startsWith("tmdb_movie_") ? "Primero debes seleccionar la película desde tu catálogo" : ""}
-                      className="w-full flex items-center justify-center gap-2 bg-[#7B2FBE] hover:bg-[#6a28a6] disabled:opacity-40 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                      {top10Draft.id?.startsWith("tmdb_movie_") ? "⚠️ Selecciona desde tu Catálogo" : "Agregar al Top 10"}
+                      <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${config.top10.override ? "translate-x-6" : "translate-x-0.5"}`} />
                     </button>
                   </div>
                 </div>
 
-                {/* Resultados TMDB */}
-                {top10TmdbResults.length > 0 && (
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <p className="text-xs text-white/40 mb-2">Resultados TMDB (elegí uno para autocompletar)</p>
-                    <div className="grid sm:grid-cols-2 gap-2">
-                      {top10TmdbResults.map((r) => (
+                {config.top10.override && (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+                      <div className="sm:col-span-2">
+                        <label className="text-xs text-white/40 mb-1 block">Buscar película por título</label>
+                        <input
+                          value={top10NameQuery}
+                          onChange={(e) => setTop10NameQuery(e.target.value)}
+                          placeholder="Ej: El Padrino, Interstellar..."
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#E50914]"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-white/40 mb-1 block">Tipo</label>
+                        <select
+                          value={top10Draft.tipo || "movie"}
+                          onChange={(e) => setTop10Draft((p) => ({ ...p, tipo: e.target.value as BannerItem["tipo"] }))}
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#E50914]"
+                        >
+                          <option value="movie">Película</option>
+                          <option value="serie">Serie</option>
+                          <option value="anime">Anime</option>
+                        </select>
+                      </div>
+                      <div className="sm:col-span-2 flex gap-2">
                         <button
-                          key={r.tmdbId}
                           onClick={async () => {
-                            setTop10Draft((p) => ({
-                              ...p,
-                              tmdbId: r.tmdbId,
-                              year: r.year,
-                              overview: r.overview,
-                              tipo: r.tipo,
-                              titulo: r.titulo,
-                              posterUrl: r.posterUrl,
-                              backdropUrl: r.backdropUrl,
-                            }));
-                            setTop10NameQuery(r.titulo);
-
+                            const q = top10NameQuery.trim();
+                            if (!q) return;
+                            setTop10TmdbLoading(true);
+                            setTop10TmdbResults([]);
+                            try { setTop10TmdbResults(await fetchTmdbSearch(q, (top10Draft.tipo as any) || "movie")); }
+                            finally { setTop10TmdbLoading(false); }
+                          }}
+                          disabled={top10TmdbLoading}
+                          className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                        >
+                          {top10TmdbLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                          Buscar TMDB
+                        </button>
+                        <button
+                          onClick={async () => {
+                            const q = top10NameQuery.trim();
+                            if (!q) return;
                             setTop10CatalogLoading(true);
-                            try {
-                              const catalog = await fetchCatalogSearch(r.titulo);
-                              setTop10CatalogResults(catalog);
-                              const best = autoPickCatalogMatch(r, catalog);
-                              if (best) await selectCatalogItemForTop10(best);
-                            } finally {
-                              setTop10CatalogLoading(false);
-                            }
+                            setTop10CatalogResults([]);
+                            try { setTop10CatalogResults(await fetchCatalogSearch(q)); }
+                            finally { setTop10CatalogLoading(false); }
                           }}
-                          className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-left transition-colors"
+                          disabled={top10CatalogLoading}
+                          className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
                         >
-                          {r.posterUrl ? (
-                            <img src={r.posterUrl} alt={r.titulo} className="w-10 h-14 object-cover rounded" />
-                          ) : (
-                            <div className="w-10 h-14 bg-white/10 rounded" />
-                          )}
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold truncate">{r.titulo}</p>
-                            <p className="text-xs text-white/40">{r.tipo}{r.year ? ` • ${r.year}` : ""}</p>
-                          </div>
+                          {top10CatalogLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                          Buscar Catálogo
                         </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Resultados Catálogo */}
-                {top10CatalogResults.length > 0 && (
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <p className="text-xs text-white/40 mb-2">Tu catálogo (Google Sheets)</p>
-                    <div className="grid sm:grid-cols-2 gap-2 max-h-64 overflow-auto pr-1">
-                      {top10CatalogResults.map((r) => (
-                        <button
-                          key={`${r.tipo}:${r.id}`}
-                          onClick={() => selectCatalogItemForTop10(r)}
-                          className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-left transition-colors"
-                        >
-                          {r.posterUrl ? (
-                            <img src={r.posterUrl} alt={r.titulo} className="w-10 h-14 object-cover rounded" />
-                          ) : (
-                            <div className="w-10 h-14 bg-white/10 rounded" />
-                          )}
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold truncate">{r.titulo}</p>
-                            <p className="text-xs text-white/40">ID: {r.id}{r.año ? ` • ${r.año}` : ""}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  {config.top10.items.length === 0 && (
-                    <div className="text-center py-10 text-white/20 text-sm border border-dashed border-white/10 rounded-lg">
-                      Sin items. Agrega contenido arriba.
-                    </div>
-                  )}
-                  {config.top10.items.map((item, i) => (
-                    <div key={item.id} className="flex items-center gap-4 bg-white/5 rounded-lg px-4 py-3">
-                      <span className="text-4xl font-bold font-display text-white/20 w-10 text-right leading-none">{i + 1}</span>
-                      {item.posterUrl && <img src={item.posterUrl} alt={item.titulo} className="w-10 h-14 object-cover rounded" />}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">{item.titulo}</p>
-                        <p className="text-white/30 text-xs capitalize">{item.tipo}</p>
                       </div>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={() => {
-                            updateConfig((c) => {
-                              const arr = [...c.top10.items];
-                              if (i > 0) [arr[i], arr[i - 1]] = [arr[i - 1], arr[i]];
-                              return { ...c, top10: { ...c.top10, items: arr } };
-                            });
-                          }}
-                          disabled={i === 0}
-                          className="text-white/30 hover:text-white disabled:opacity-10 p-1 transition-colors"
+                      <div>
+                        <label className="text-xs text-white/40 mb-1 block">Posición (1-10)</label>
+                        <input type="number" min={1} max={10} value={top10Draft.position ?? ""}
+                          onChange={(e) => { const v = e.target.value === "" ? "" : Math.max(1, Math.min(10, Number(e.target.value))); setTop10Draft((p) => ({ ...p, position: v })); }}
+                          placeholder="(opcional)"
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#E50914]"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-white/40 mb-1 block">ID interno (Sheets)</label>
+                        <input value={top10Draft.id || ""} onChange={(e) => setTop10Draft((p) => ({ ...p, id: e.target.value }))} placeholder="id_unico..."
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#E50914]"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="text-xs text-white/40 mb-1 block">Título</label>
+                        <input value={top10Draft.titulo || ""} onChange={(e) => setTop10Draft((p) => ({ ...p, titulo: e.target.value }))} placeholder="Se completa automáticamente"
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#E50914]"
+                        />
+                      </div>
+                      <div className="sm:col-span-3">
+                        <button onClick={addTop10Item} disabled={!top10Draft.id || !top10Draft.titulo}
+                          className="w-full flex items-center justify-center gap-2 bg-[#E50914] hover:bg-[#c5070f] disabled:opacity-40 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors"
                         >
-                          <MoveUp className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            updateConfig((c) => {
-                              const arr = [...c.top10.items];
-                              if (i < arr.length - 1) [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-                              return { ...c, top10: { ...c.top10, items: arr } };
-                            });
-                          }}
-                          disabled={i === config.top10.items.length - 1}
-                          className="text-white/30 hover:text-white disabled:opacity-10 p-1 transition-colors"
-                        >
-                          <MoveDown className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => removeTop10Item(item.id)} className="text-white/30 hover:text-[#7B2FBE] p-1 transition-colors">
-                          <Trash2 className="w-4 h-4" />
+                          <Plus className="w-4 h-4" />Agregar al Top Películas
                         </button>
                       </div>
                     </div>
-                  ))}
-                </div>
+
+                    {top10TmdbResults.length > 0 && (
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40 mb-2">Resultados TMDB</p>
+                        <div className="grid sm:grid-cols-2 gap-2">
+                          {top10TmdbResults.map((r) => (
+                            <button key={r.tmdbId} onClick={async () => {
+                              setTop10Draft((p) => ({ ...p, tmdbId: r.tmdbId, year: r.year, overview: r.overview, tipo: r.tipo, titulo: r.titulo, posterUrl: r.posterUrl, backdropUrl: r.backdropUrl }));
+                              setTop10NameQuery(r.titulo);
+                              setTop10CatalogLoading(true);
+                              try { const cat = await fetchCatalogSearch(r.titulo); setTop10CatalogResults(cat); const best = autoPickCatalogMatch(r, cat); if (best) await selectCatalogItemForTop10(best); }
+                              finally { setTop10CatalogLoading(false); }
+                            }} className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-left transition-colors">
+                              {r.posterUrl ? <img src={r.posterUrl} alt={r.titulo} className="w-10 h-14 object-cover rounded" /> : <div className="w-10 h-14 bg-white/10 rounded" />}
+                              <div className="min-w-0"><p className="text-sm font-semibold truncate">{r.titulo}</p><p className="text-xs text-white/40">{r.tipo}{r.year ? ` • ${r.year}` : ""}</p></div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {top10CatalogResults.length > 0 && (
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40 mb-2">Tu catálogo (Google Sheets)</p>
+                        <div className="grid sm:grid-cols-2 gap-2 max-h-64 overflow-auto pr-1">
+                          {top10CatalogResults.map((r) => (
+                            <button key={`${r.tipo}:${r.id}`} onClick={() => selectCatalogItemForTop10(r)}
+                              className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-left transition-colors">
+                              {r.posterUrl ? <img src={r.posterUrl} alt={r.titulo} className="w-10 h-14 object-cover rounded" /> : <div className="w-10 h-14 bg-white/10 rounded" />}
+                              <div className="min-w-0"><p className="text-sm font-semibold truncate">{r.titulo}</p><p className="text-xs text-white/40">ID: {r.id}{r.año ? ` • ${r.año}` : ""}</p></div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      {config.top10.items.length === 0 && (
+                        <div className="text-center py-10 text-white/20 text-sm border border-dashed border-white/10 rounded-lg">Sin películas. Agrega contenido arriba.</div>
+                      )}
+                      {config.top10.items.map((item, i) => (
+                        <div key={item.id} className="flex items-center gap-4 bg-white/5 rounded-lg px-4 py-3">
+                          <span className="text-4xl font-bold font-display text-[#E50914]/30 w-10 text-right leading-none">{i + 1}</span>
+                          {item.posterUrl && <img src={item.posterUrl} alt={item.titulo} className="w-10 h-14 object-cover rounded" />}
+                          <div className="flex-1 min-w-0"><p className="font-semibold text-sm truncate">{item.titulo}</p><p className="text-white/30 text-xs capitalize">{item.tipo}</p></div>
+                          <div className="flex gap-1">
+                            <button onClick={() => { updateConfig((c) => { const arr = [...c.top10.items]; if (i > 0) [arr[i], arr[i - 1]] = [arr[i - 1], arr[i]]; return { ...c, top10: { ...c.top10, items: arr } }; }); }} disabled={i === 0} className="text-white/30 hover:text-white disabled:opacity-10 p-1 transition-colors"><MoveUp className="w-4 h-4" /></button>
+                            <button onClick={() => { updateConfig((c) => { const arr = [...c.top10.items]; if (i < arr.length - 1) [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]; return { ...c, top10: { ...c.top10, items: arr } }; }); }} disabled={i === config.top10.items.length - 1} className="text-white/30 hover:text-white disabled:opacity-10 p-1 transition-colors"><MoveDown className="w-4 h-4" /></button>
+                            <button onClick={() => removeTop10Item(item.id)} className="text-white/30 hover:text-[#E50914] p-1 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {!config.top10.override && (
+                  <div className="text-center py-12 text-white/20 text-sm border border-dashed border-white/10 rounded-xl">
+                    El Top Películas se genera automáticamente por valoración.<br />Activa el override para controlarlo manualmente.
+                  </div>
+                )}
               </>
             )}
-            {!config.top10.override && (
-              <div className="text-center py-12 text-white/20 text-sm border border-dashed border-white/10 rounded-xl">
-                El Top 10 se genera automáticamente desde el catálogo.<br />Activa el override para controlarlo manualmente.
-              </div>
+
+            {/* ── TOP SERIES ── */}
+            {top10SubTab === "series" && (
+              <>
+                <div className="flex items-center justify-between">
+                  <p className="text-white/40 text-sm">Fija las 10 series del ranking. Activa el override para editar.</p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-white/40 text-sm">{(config as any).top10Series?.override ? "Override activo" : "Automático"}</span>
+                    <button
+                      onClick={() => updateConfig((c) => ({ ...c, top10Series: { ...(c as any).top10Series, override: !(c as any).top10Series?.override } }))}
+                      className={`relative w-12 h-6 rounded-full transition-colors ${(config as any).top10Series?.override ? "bg-[#0ea5e9]" : "bg-white/20"}`}
+                    >
+                      <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${(config as any).top10Series?.override ? "translate-x-6" : "translate-x-0.5"}`} />
+                    </button>
+                  </div>
+                </div>
+
+                {(config as any).top10Series?.override && (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+                      <div className="sm:col-span-2">
+                        <label className="text-xs text-white/40 mb-1 block">Buscar serie por título</label>
+                        <input
+                          value={top10SeriesNameQuery}
+                          onChange={(e) => setTop10SeriesNameQuery(e.target.value)}
+                          placeholder="Ej: Breaking Bad, Friends, Attack on Titan..."
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#0ea5e9]"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-white/40 mb-1 block">Tipo</label>
+                        <select
+                          value={top10SeriesDraft.tipo || "serie"}
+                          onChange={(e) => setTop10SeriesDraft((p) => ({ ...p, tipo: e.target.value as BannerItem["tipo"] }))}
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#0ea5e9]"
+                        >
+                          <option value="serie">Serie</option>
+                          <option value="anime">Anime</option>
+                        </select>
+                      </div>
+                      <div className="sm:col-span-2 flex gap-2">
+                        <button
+                          onClick={async () => {
+                            const q = top10SeriesNameQuery.trim();
+                            if (!q) return;
+                            setTop10SeriesTmdbLoading(true);
+                            setTop10SeriesTmdbResults([]);
+                            try { setTop10SeriesTmdbResults(await fetchTmdbSearch(q, (top10SeriesDraft.tipo as any) || "serie")); }
+                            finally { setTop10SeriesTmdbLoading(false); }
+                          }}
+                          disabled={top10SeriesTmdbLoading}
+                          className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                        >
+                          {top10SeriesTmdbLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                          Buscar TMDB
+                        </button>
+                        <button
+                          onClick={async () => {
+                            const q = top10SeriesNameQuery.trim();
+                            if (!q) return;
+                            setTop10SeriesCatalogLoading(true);
+                            setTop10SeriesCatalogResults([]);
+                            try { setTop10SeriesCatalogResults(await fetchCatalogSearch(q)); }
+                            finally { setTop10SeriesCatalogLoading(false); }
+                          }}
+                          disabled={top10SeriesCatalogLoading}
+                          className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                        >
+                          {top10SeriesCatalogLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                          Buscar Catálogo
+                        </button>
+                      </div>
+                      <div>
+                        <label className="text-xs text-white/40 mb-1 block">Posición (1-10)</label>
+                        <input type="number" min={1} max={10} value={top10SeriesDraft.position ?? ""}
+                          onChange={(e) => { const v = e.target.value === "" ? "" : Math.max(1, Math.min(10, Number(e.target.value))); setTop10SeriesDraft((p) => ({ ...p, position: v })); }}
+                          placeholder="(opcional)"
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#0ea5e9]"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-white/40 mb-1 block">ID interno (Sheets)</label>
+                        <input value={top10SeriesDraft.id || ""} onChange={(e) => setTop10SeriesDraft((p) => ({ ...p, id: e.target.value }))} placeholder="id_unico..."
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#0ea5e9]"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="text-xs text-white/40 mb-1 block">Título</label>
+                        <input value={top10SeriesDraft.titulo || ""} onChange={(e) => setTop10SeriesDraft((p) => ({ ...p, titulo: e.target.value }))} placeholder="Se completa automáticamente"
+                          className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#0ea5e9]"
+                        />
+                      </div>
+                      <div className="sm:col-span-3">
+                        <button onClick={addTop10SeriesItem} disabled={!top10SeriesDraft.id || !top10SeriesDraft.titulo}
+                          className="w-full flex items-center justify-center gap-2 bg-[#0ea5e9] hover:bg-[#0284c7] disabled:opacity-40 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors"
+                        >
+                          <Plus className="w-4 h-4" />Agregar al Top Series
+                        </button>
+                      </div>
+                    </div>
+
+                    {top10SeriesTmdbResults.length > 0 && (
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40 mb-2">Resultados TMDB</p>
+                        <div className="grid sm:grid-cols-2 gap-2">
+                          {top10SeriesTmdbResults.map((r) => (
+                            <button key={r.tmdbId} onClick={async () => {
+                              setTop10SeriesDraft((p) => ({ ...p, tmdbId: r.tmdbId, year: r.year, overview: r.overview, tipo: r.tipo, titulo: r.titulo, posterUrl: r.posterUrl, backdropUrl: r.backdropUrl }));
+                              setTop10SeriesNameQuery(r.titulo);
+                              setTop10SeriesCatalogLoading(true);
+                              try { const cat = await fetchCatalogSearch(r.titulo); setTop10SeriesCatalogResults(cat); const best = autoPickCatalogMatch(r, cat); if (best) await selectCatalogItemForTop10Series(best); }
+                              finally { setTop10SeriesCatalogLoading(false); }
+                            }} className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-left transition-colors">
+                              {r.posterUrl ? <img src={r.posterUrl} alt={r.titulo} className="w-10 h-14 object-cover rounded" /> : <div className="w-10 h-14 bg-white/10 rounded" />}
+                              <div className="min-w-0"><p className="text-sm font-semibold truncate">{r.titulo}</p><p className="text-xs text-white/40">{r.tipo}{r.year ? ` • ${r.year}` : ""}</p></div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {top10SeriesCatalogResults.length > 0 && (
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p className="text-xs text-white/40 mb-2">Tu catálogo (Google Sheets)</p>
+                        <div className="grid sm:grid-cols-2 gap-2 max-h-64 overflow-auto pr-1">
+                          {top10SeriesCatalogResults.map((r) => (
+                            <button key={`${r.tipo}:${r.id}`} onClick={() => selectCatalogItemForTop10Series(r)}
+                              className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-left transition-colors">
+                              {r.posterUrl ? <img src={r.posterUrl} alt={r.titulo} className="w-10 h-14 object-cover rounded" /> : <div className="w-10 h-14 bg-white/10 rounded" />}
+                              <div className="min-w-0"><p className="text-sm font-semibold truncate">{r.titulo}</p><p className="text-xs text-white/40">ID: {r.id}{r.año ? ` • ${r.año}` : ""}</p></div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      {((config as any).top10Series?.items || []).length === 0 && (
+                        <div className="text-center py-10 text-white/20 text-sm border border-dashed border-white/10 rounded-lg">Sin series. Agrega contenido arriba.</div>
+                      )}
+                      {((config as any).top10Series?.items || []).map((item: BannerItem, i: number) => (
+                        <div key={item.id} className="flex items-center gap-4 bg-white/5 rounded-lg px-4 py-3">
+                          <span className="text-4xl font-bold font-display text-[#0ea5e9]/30 w-10 text-right leading-none">{i + 1}</span>
+                          {item.posterUrl && <img src={item.posterUrl} alt={item.titulo} className="w-10 h-14 object-cover rounded" />}
+                          <div className="flex-1 min-w-0"><p className="font-semibold text-sm truncate">{item.titulo}</p><p className="text-white/30 text-xs capitalize">{item.tipo}</p></div>
+                          <div className="flex gap-1">
+                            <button onClick={() => { updateConfig((c) => { const arr = [...(c as any).top10Series.items]; if (i > 0) [arr[i], arr[i - 1]] = [arr[i - 1], arr[i]]; return { ...c, top10Series: { ...(c as any).top10Series, items: arr } }; }); }} disabled={i === 0} className="text-white/30 hover:text-white disabled:opacity-10 p-1 transition-colors"><MoveUp className="w-4 h-4" /></button>
+                            <button onClick={() => { updateConfig((c) => { const arr = [...(c as any).top10Series.items]; if (i < arr.length - 1) [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]; return { ...c, top10Series: { ...(c as any).top10Series, items: arr } }; }); }} disabled={i === ((config as any).top10Series?.items || []).length - 1} className="text-white/30 hover:text-white disabled:opacity-10 p-1 transition-colors"><MoveDown className="w-4 h-4" /></button>
+                            <button onClick={() => removeTop10SeriesItem(item.id)} className="text-white/30 hover:text-[#0ea5e9] p-1 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {!(config as any).top10Series?.override && (
+                  <div className="text-center py-12 text-white/20 text-sm border border-dashed border-white/10 rounded-xl">
+                    El Top Series se genera automáticamente con las primeras 10 series del catálogo.<br />Activa el override para controlarlo manualmente.
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

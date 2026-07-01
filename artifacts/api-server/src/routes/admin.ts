@@ -22,7 +22,7 @@ function readConfig() {
   try {
     return JSON.parse(fs.readFileSync(getConfigPath(), "utf-8"));
   } catch {
-    return { banner: { override: false, items: [] }, top10: { override: false, items: [] }, hiddenSections: [], customSections: [] };
+    return { banner: { override: false, items: [] }, top10: { override: false, items: [] }, top10Series: { override: false, items: [] }, hiddenSections: [], customSections: [] };
   }
 }
 

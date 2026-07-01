@@ -283,6 +283,26 @@ export const GetHomeContentResponse = zod.object({
   "valoracion": zod.string().nullish(),
   "categoria": zod.enum(['movie', 'serie', 'anime']).optional()
 })),
+  "top10Series": zod.array(zod.object({
+  "id": zod.string(),
+  "titulo": zod.string(),
+  "sinopsis": zod.string().nullish(),
+  "posterUrl": zod.string().nullish(),
+  "backdropUrl": zod.string().nullish(),
+  "logoUrl": zod.string().nullish(),
+  "urlReproduccion": zod.string().nullish(),
+  "youtubeTrailer": zod.string().nullish(),
+  "genero": zod.string().nullish(),
+  "año": zod.string().nullish(),
+  "actores": zod.string().nullish(),
+  "vistas": zod.string().nullish(),
+  "esVip": zod.boolean().optional(),
+  "enBanner": zod.boolean().optional(),
+  "tipo": zod.string().nullish(),
+  "status": zod.string().nullish(),
+  "valoracion": zod.string().nullish(),
+  "categoria": zod.enum(['movie', 'serie', 'anime']).optional()
+})).optional(),
   "trending": zod.array(zod.object({
   "id": zod.string(),
   "titulo": zod.string(),

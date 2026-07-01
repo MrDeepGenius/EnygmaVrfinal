@@ -58,12 +58,6 @@ export default function Home() {
   const allSeries = seriesData?.items || [];
   const allAnime  = animeData?.items  || [];
 
-  const top10Movies2026 = useMemo(() =>
-    allMovies.filter(m => m.año?.trim() === "2026").slice(0, 10),
-    [allMovies]
-  );
-
-  const top10Series = useMemo(() => allSeries.slice(0, 10), [allSeries]);
   const top10Anime  = useMemo(() => allAnime.slice(0, 10),  [allAnime]);
 
   const byGenre = useMemo(() => (keywords: string[]) =>
@@ -122,11 +116,12 @@ export default function Home() {
     );
   }
 
-  const bannerItems   = content.banner        || [];
-  const top10Items    = content.top10         || [];
-  const latestMovies  = content.latestMovies  || [];
-  const latestSeries  = content.latestSeries  || [];
-  const latestAnime   = content.latestAnime   || [];
+  const bannerItems      = content.banner        || [];
+  const top10Items       = content.top10         || [];
+  const top10SeriesItems = (content as any).top10Series || [];
+  const latestMovies     = content.latestMovies  || [];
+  const latestSeries     = content.latestSeries  || [];
+  const latestAnime      = content.latestAnime   || [];
 
   return (
     <Layout>
@@ -187,11 +182,11 @@ export default function Home() {
           />
         )}
 
-        {/* ── Top 10 Películas 2026 ── */}
-        {top10Movies2026.length > 0 && (
+        {/* ── Top 10 Películas ── */}
+        {top10Items.length > 0 && (
           <TopTenRanking
-            items={top10Movies2026}
-            title="Top 10 Películas 2026"
+            items={top10Items}
+            title="Top 10 Películas en ENYGMA"
             type="movie"
             accentColor="#E50914"
             shadowColor="rgba(229,9,20,0.45)"
@@ -199,10 +194,10 @@ export default function Home() {
         )}
 
         {/* ── Top 10 Series ── */}
-        {top10Series.length > 0 && (
+        {top10SeriesItems.length > 0 && (
           <TopTenRanking
-            items={top10Series}
-            title="Top 10 Series"
+            items={top10SeriesItems as any}
+            title="Top 10 Series en ENYGMA"
             type="serie"
             accentColor="#0ea5e9"
             shadowColor="rgba(14,165,233,0.45)"
@@ -217,17 +212,6 @@ export default function Home() {
             type="anime"
             accentColor="#7B2FBE"
             shadowColor="rgba(123,47,190,0.45)"
-          />
-        )}
-
-        {/* ── Top 10 (home API) ── */}
-        {top10Items.length > 0 && (
-          <TopTenRanking
-            items={top10Items}
-            title="Top 10 en ENYGMA"
-            type="movie"
-            accentColor="#E50914"
-            shadowColor="rgba(229,9,20,0.45)"
           />
         )}
 
