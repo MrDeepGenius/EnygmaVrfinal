@@ -703,12 +703,9 @@ export async function getHomeContent(profile?: string): Promise<{
 
   // Banner: pinned titles always appear first, in order
   const PINNED_BANNER_TITLES = [
-    "el dia de la revelacion",
-    "supergirl",
-    "scary movie",
-    "te van a matar",
-    "toy story 5",
-    "extreme makeover",
+    "obsesion",
+    "spidernoir",
+    "te encontrare",
   ];
 
   const normalize = (s: string) =>
@@ -718,16 +715,47 @@ export async function getHomeContent(profile?: string): Promise<{
       .replace(/[^a-z0-9 ]/g, "")
       .trim();
 
-  const pinnedMovies: Movie[] = [];
+  const pinnedBanner: Movie[] = [];
   for (const title of PINNED_BANNER_TITLES) {
-    const found = allMovies.find((m) =>
-      normalize(m.titulo).includes(normalize(title))
+    const norm = normalize(title);
+    // Search movies first
+    const foundMovie = allMovies.find((m) =>
+      normalize(m.titulo).includes(norm)
     );
-    if (found) pinnedMovies.push(found);
+    if (foundMovie) {
+      pinnedBanner.push(foundMovie);
+      continue;
+    }
+    // Then search series and anime
+    const foundSerie = [...allSeries, ...allAnime].find((s) =>
+      normalize(s.titulo).includes(norm)
+    );
+    if (foundSerie) {
+      pinnedBanner.push({
+        id: foundSerie.id,
+        titulo: foundSerie.titulo,
+        sinopsis: foundSerie.sinopsis,
+        posterUrl: foundSerie.posterUrl,
+        backdropUrl: foundSerie.backdropUrl,
+        logoUrl: foundSerie.logoUrl,
+        urlReproduccion: null,
+        youtubeTrailer: foundSerie.youtubeTrailer,
+        genero: foundSerie.genero,
+        año: foundSerie.año,
+        actores: null,
+        vistas: null,
+        esVip: false,
+        enBanner: true,
+        tipo: null,
+        status: null,
+        valoracion: null,
+        categoria: "movie",
+      });
+    }
   }
 
   // Banner: SOLO los títulos fijados, sin relleno adicional
-  const banner: Movie[] = pinnedMovies;
+  const banner: Movie[] = pinnedBanner;
 
   const result = {
     banner,
