@@ -701,65 +701,45 @@ export async function getHomeContent(profile?: string): Promise<{
   const latestSeries = [...allSeries].reverse().slice(0, 20);
   const latestAnime = [...allAnime].reverse().slice(0, 20);
 
-  // Banner: pinned by ID (movies) or title keyword (series/anime)
-  const PINNED_BANNER_IDS: string[] = [
-    "1339713", // Obsesión (película)
+  // Banner: orden exacto por ID y tipo (movie o serie)
+  const PINNED_BANNER: Array<{ id: string; type: "movie" | "serie" | "anime" }> = [
+    { id: "1413976", type: "movie" }, // Citizen Vigilante
+    { id: "278178",  type: "serie" }, // Te encontraré
+    { id: "1084244", type: "movie" }, // Toy Story 5
+    { id: "1339713", type: "movie" }, // Obsesión
+    { id: "220102",  type: "serie" }, // Spider-Noir (2026)
   ];
-  const PINNED_BANNER_SERIES_TITLES: string[] = [
-    "spidernoir",    // Spider-Noir (2026)
-    "te encontrare", // Te encontraré
-  ];
-
-  const normalize = (s: string) =>
-    s.toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9 ]/g, "")
-      .trim();
-
-  const findBestSerie = <T extends { titulo: string }>(items: T[], keyword: string): T | undefined => {
-    const n = normalize(keyword);
-    const exact = items.find((m) => normalize(m.titulo) === n);
-    if (exact) return exact;
-    const nWords = n.split(/\s+/);
-    return items.find((m) => {
-      const hWords = normalize(m.titulo).split(/\s+/);
-      return nWords.every((w) => hWords.includes(w));
-    });
-  };
 
   const pinnedBanner: Movie[] = [];
 
-  // 1. Movies pinned by exact ID
-  for (const id of PINNED_BANNER_IDS) {
-    const found = allMovies.find((m) => m.id === id);
-    if (found) pinnedBanner.push(found);
-  }
-
-  // 2. Series/anime pinned by keyword
-  for (const keyword of PINNED_BANNER_SERIES_TITLES) {
-    const foundSerie = findBestSerie([...allSeries, ...allAnime], keyword);
-    if (foundSerie) {
-      pinnedBanner.push({
-        id: foundSerie.id,
-        titulo: foundSerie.titulo,
-        sinopsis: foundSerie.sinopsis,
-        posterUrl: foundSerie.posterUrl,
-        backdropUrl: foundSerie.backdropUrl,
-        logoUrl: foundSerie.logoUrl,
-        urlReproduccion: null,
-        youtubeTrailer: foundSerie.youtubeTrailer,
-        genero: foundSerie.genero,
-        año: foundSerie.año,
-        actores: null,
-        vistas: null,
-        esVip: false,
-        enBanner: true,
-        tipo: null,
-        status: null,
-        valoracion: null,
-        categoria: "movie",
-      });
+  for (const pin of PINNED_BANNER) {
+    if (pin.type === "movie") {
+      const found = allMovies.find((m) => m.id === pin.id);
+      if (found) pinnedBanner.push(found);
+    } else {
+      const found = [...allSeries, ...allAnime].find((s) => s.id === pin.id);
+      if (found) {
+        pinnedBanner.push({
+          id: found.id,
+          titulo: found.titulo,
+          sinopsis: found.sinopsis,
+          posterUrl: found.posterUrl,
+          backdropUrl: found.backdropUrl,
+          logoUrl: found.logoUrl,
+          urlReproduccion: null,
+          youtubeTrailer: found.youtubeTrailer,
+          genero: found.genero,
+          año: found.año,
+          actores: null,
+          vistas: null,
+          esVip: false,
+          enBanner: true,
+          tipo: null,
+          status: null,
+          valoracion: null,
+          categoria: pin.type as "movie",
+        });
+      }
     }
   }
 
