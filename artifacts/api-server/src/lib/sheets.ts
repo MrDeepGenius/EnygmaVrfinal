@@ -708,6 +708,7 @@ export async function getHomeContent(profile?: string): Promise<{
     { id: "1084244", type: "movie" }, // Toy Story 5
     { id: "1339713", type: "movie" }, // Obsesión
     { id: "220102",  type: "serie" }, // Spider-Noir (2026)
+    { id: "1273221", type: "movie" }, // (nuevo)
   ];
 
   const pinnedBanner: Movie[] = [];
