@@ -701,11 +701,13 @@ export async function getHomeContent(profile?: string): Promise<{
   const latestSeries = [...allSeries].reverse().slice(0, 20);
   const latestAnime = [...allAnime].reverse().slice(0, 20);
 
-  // Banner: pinned titles always appear first, in order
-  const PINNED_BANNER_TITLES = [
-    "obsesion",
-    "spidernoir",
-    "te encontrare",
+  // Banner: pinned by ID (movies) or title keyword (series/anime)
+  const PINNED_BANNER_IDS: string[] = [
+    "1339713", // Obsesión (película)
+  ];
+  const PINNED_BANNER_SERIES_TITLES: string[] = [
+    "spidernoir",    // Spider-Noir (2026)
+    "te encontrare", // Te encontraré
   ];
 
   const normalize = (s: string) =>
@@ -715,21 +717,28 @@ export async function getHomeContent(profile?: string): Promise<{
       .replace(/[^a-z0-9 ]/g, "")
       .trim();
 
+  const findBestSerie = <T extends { titulo: string }>(items: T[], keyword: string): T | undefined => {
+    const n = normalize(keyword);
+    const exact = items.find((m) => normalize(m.titulo) === n);
+    if (exact) return exact;
+    const nWords = n.split(/\s+/);
+    return items.find((m) => {
+      const hWords = normalize(m.titulo).split(/\s+/);
+      return nWords.every((w) => hWords.includes(w));
+    });
+  };
+
   const pinnedBanner: Movie[] = [];
-  for (const title of PINNED_BANNER_TITLES) {
-    const norm = normalize(title);
-    // Search movies first
-    const foundMovie = allMovies.find((m) =>
-      normalize(m.titulo).includes(norm)
-    );
-    if (foundMovie) {
-      pinnedBanner.push(foundMovie);
-      continue;
-    }
-    // Then search series and anime
-    const foundSerie = [...allSeries, ...allAnime].find((s) =>
-      normalize(s.titulo).includes(norm)
-    );
+
+  // 1. Movies pinned by exact ID
+  for (const id of PINNED_BANNER_IDS) {
+    const found = allMovies.find((m) => m.id === id);
+    if (found) pinnedBanner.push(found);
+  }
+
+  // 2. Series/anime pinned by keyword
+  for (const keyword of PINNED_BANNER_SERIES_TITLES) {
+    const foundSerie = findBestSerie([...allSeries, ...allAnime], keyword);
     if (foundSerie) {
       pinnedBanner.push({
         id: foundSerie.id,
