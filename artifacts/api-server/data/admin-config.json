@@ -4,8 +4,99 @@
     "items": []
   },
   "top10": {
-    "override": false,
-    "items": []
+    "override": true,
+    "items": [
+      {
+        "id": "1084244",
+        "titulo": "Toy Story 5",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/1yF3AztF3rQ8MZ8En8974AWo5zZ.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/kwq3lxPrBfyyVRRSDSlojwCPzwH.jpg",
+        "year": "2026",
+        "tmdbId": 1084244
+      },
+      {
+        "id": "1273221",
+        "titulo": "Scary Movie 6",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/vUPE82BWRZwq6M5Xc9UNuf8AffK.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/lj6AaDqDUbzm2XJltFNHeAm2uXN.jpg",
+        "year": "2026",
+        "tmdbId": 1273221
+      },
+      {
+        "id": "1292695",
+        "titulo": "Te van a matar",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/4nMIuF7AnBCA2kEOdZ4t7f2GF10.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/qnTdOizsXBzYu3uIbfhHSfE29TE.jpg",
+        "year": "2026",
+        "tmdbId": 1292695
+      },
+      {
+        "id": "1272837",
+        "titulo": "28 años después: El templo de los huesos",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/2DTPapravB7kVBWjm6RsqEWyNqn.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/hHDNOlATHhre4eZ7aYz5cdyJLik.jpg",
+        "year": "2026",
+        "tmdbId": 1272837
+      },
+      {
+        "id": "1330021",
+        "titulo": "Criaturas luminosas",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/aNixJoh0U4kN85YM6vPyVZL6ALF.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/bVGHSe47W6oCQL1Q88pvRAet51A.jpg",
+        "year": "2026",
+        "tmdbId": 1330021
+      },
+      {
+        "id": "1327819",
+        "titulo": "Hoppers",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/4Z0E1W7YvQ0aVtgj7KKtktb9ukd.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/u53UYu5XG2hNgWGvs3xGhAVzypl.jpg",
+        "year": "2026",
+        "tmdbId": 1327819
+      },
+      {
+        "id": "1226863",
+        "titulo": "Super Mario Galaxy la película",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/79EVB4qhyfrdlMgT8GIRAikdzsQ.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/9Z2uDYXqJrlmePznQQJhL6d92Rq.jpg",
+        "year": "2026",
+        "tmdbId": 1226863
+      },
+      {
+        "id": "1275779",
+        "titulo": "El día de la revelación",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/uGww4UrU3316Mld4p30dgdM09Du.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/s6ly8laenkHWlIBRkLSfIuEMLC6.jpg",
+        "year": "2026",
+        "tmdbId": 1275779
+      },
+      {
+        "id": "1297842",
+        "titulo": "GOAT: Como cabras",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/l8Y8o3RpFg54gmQQ8GVaxVroFmY.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/tq3h43fZy0H80vzf47MAY7R9Mxo.jpg",
+        "year": "2025",
+        "tmdbId": 1297842
+      },
+      {
+        "id": "1413976",
+        "titulo": "Citizen Vigilante",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/6LmJD3Wohe0g4U62wgi7RyJqfE4.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/qJ2KSHJhlFvASBMLbGuP7OFMaFg.jpg",
+        "year": "2026",
+        "tmdbId": 1413976
+      }
+    ]
   },
   "hiddenSections": [],
   "customSections": [
