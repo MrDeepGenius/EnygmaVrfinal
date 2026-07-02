@@ -8,6 +8,7 @@ import { AdminGeolocationTab } from "@/components/admin-geolocation-tab";
 import { AdminLogin } from "@/components/admin-login";
 import { AdminCustomSections } from "@/components/admin-custom-sections";
 import { AdminSearchTab } from "@/components/admin-search-tab";
+import { AdminRequestsTab } from "@/components/admin-requests-tab";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -57,7 +58,7 @@ const TMDB_TYPES = [
   { key: "top_rated_series", label: "Mejor Valoradas (Series)" },
 ];
 
-type Tab = "secciones" | "banner" | "top10" | "tmdb" | "premium" | "geolocation" | "search";
+type Tab = "secciones" | "banner" | "top10" | "tmdb" | "premium" | "geolocation" | "search" | "pedidos";
 
 function SaveBadge({ saved }: { saved: boolean }) {
   return (
@@ -570,6 +571,7 @@ export default function Admin() {
             { key: "search", label: "🔍 Búsqueda" },
             { key: "premium", label: "💎 Premium" },
             { key: "geolocation", label: "🌍 Geolocalización" },
+            { key: "pedidos", label: "📬 Pedidos" },
           ] as { key: Tab; label: string }[]).map((t) => (
             <button
               key={t.key}
@@ -1439,6 +1441,11 @@ export default function Admin() {
         {/* SEARCH TAB */}
         {tab === "search" && (
           <AdminSearchTab />
+        )}
+
+        {/* PEDIDOS TAB */}
+        {tab === "pedidos" && (
+          <AdminRequestsTab />
         )}
 
         <div className="h-16" />

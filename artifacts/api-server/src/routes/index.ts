@@ -12,6 +12,7 @@ import premiumRouter from "./premium";
 import geoRouter from "./geolocation";
 import aiSearchRouter from "./ai-search";
 import geminiSearchRouter from "./gemini-search";
+import requestsRouter from "./requests";
 
 const router: IRouter = Router();
 
@@ -28,5 +29,6 @@ router.use("/premium", premiumRouter);
 router.use("/geo", geoRouter);
 router.use("/api", aiSearchRouter);
 router.use("/api", geminiSearchRouter);
+router.use(requestsRouter);
 
 export default router;

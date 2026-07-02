@@ -6,6 +6,7 @@ import { useProfile } from "@/lib/profile-context";
 import { useFavorites } from "@/lib/use-favorites";
 import { Button } from "@/components/ui/button";
 import { useInstallPrompt } from "@/lib/use-install-prompt";
+import { RequestBubble } from "@/components/request-bubble";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [scrolled, setScrolled] = useState(false);
@@ -184,6 +185,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <main className={`flex-1 w-full ${isProfilePage ? 'pt-0' : 'pt-14 md:pt-16'} pb-20 md:pb-12`}>
         {children}
       </main>
+
+      {/* Request bubble — hidden on admin/profile pages */}
+      {!isProfilePage && location !== "/admin" && (
+        <RequestBubble />
+      )}
 
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 safe-area-inset-bottom">
