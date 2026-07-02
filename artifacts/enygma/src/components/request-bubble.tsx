@@ -53,6 +53,7 @@ const TYPE_OPTIONS: { value: ContentType; label: string; icon: React.ElementType
 export function RequestBubble() {
   const { profile } = useProfile();
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [title, setTitle] = useState("");
   const [type, setType] = useState<ContentType>("pelicula");
   const [comment, setComment] = useState("");
@@ -123,18 +124,32 @@ export function RequestBubble() {
 
   const selectedType = TYPE_OPTIONS.find(t => t.value === type)!;
 
+  if (hidden) return null;
+
   return (
     <>
-      <motion.button
-        onClick={handleOpen}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.94 }}
-        className="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-40 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white font-bold text-xl select-none"
-        style={{ background: "linear-gradient(135deg,#E50914 0%,#7B2FBE 100%)", boxShadow: "0 4px 24px rgba(229,9,20,0.45)" }}
-        title="Pedir contenido"
-      >
-        +
-      </motion.button>
+      {/* Floating bubble group */}
+      <div className="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-40 flex flex-col items-center gap-1.5">
+        {/* Small close button above the bubble */}
+        <button
+          onClick={() => setHidden(true)}
+          className="w-5 h-5 rounded-full bg-black/60 border border-white/15 flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-black/80 transition-all"
+          title="Cerrar"
+        >
+          <X className="w-3 h-3" />
+        </button>
+
+        <motion.button
+          onClick={handleOpen}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.94 }}
+          className="w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white font-bold text-xl select-none"
+          style={{ background: "linear-gradient(135deg,#E50914 0%,#7B2FBE 100%)", boxShadow: "0 4px 24px rgba(229,9,20,0.45)" }}
+          title="Pedir contenido"
+        >
+          +
+        </motion.button>
+      </div>
 
       <AnimatePresence>
         {open && (
