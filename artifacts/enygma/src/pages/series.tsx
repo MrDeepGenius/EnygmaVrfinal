@@ -1,8 +1,9 @@
-import { useListSeries, useGetTmdbDetails, getGetTmdbDetailsQueryKey } from "@workspace/api-client-react";
+import { useListSeries, useGetTmdbDetails, getGetTmdbDetailsQueryKey, useGetHomeContent } from "@workspace/api-client-react";
 import { AdBannerSlot } from "@/components/ad-banner";
 import { useProfile } from "@/lib/profile-context";
 import { Layout } from "@/components/layout";
 import { PosterCard } from "@/components/poster-card";
+import { TopTenRanking } from "@/components/top-ten-ranking";
 
 import { useInfiniteScroll } from "@/lib/use-infinite-scroll";
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
@@ -143,6 +144,11 @@ export default function SeriesPage() {
   const { profile } = useProfile();
   const [genre, setGenre] = useState<string>("");
   const [year, setYear] = useState<string>("");
+  const { data: homeContent } = useGetHomeContent(
+    { profile: profile || undefined },
+    { query: { staleTime: 5 * 60 * 1000 } }
+  );
+  const top10Series = (homeContent as any)?.top10Series || [];
   const [offset, setOffset] = useState(0);
   const [items, setItems] = useState<Series[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -190,6 +196,18 @@ export default function SeriesPage() {
   return (
     <Layout>
       {!isLoading && allRaw.length > 0 && <SectionHero items={allRaw} />}
+
+      {top10Series.length > 0 && (
+        <div className="mt-4">
+          <TopTenRanking
+            items={top10Series}
+            title="Top 10 Series en ENYGMA"
+            type="serie"
+            accentColor="#0ea5e9"
+            shadowColor="rgba(14,165,233,0.45)"
+          />
+        </div>
+      )}
 
       <AdBannerSlot className="px-4 md:px-10 pt-2" />
 
