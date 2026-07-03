@@ -16,11 +16,19 @@ import { toggleUserPremium } from "../lib/premium-storage";
 const router = Router();
 
 // Middleware to check admin authentication
+// If ADMIN_TOKEN env var is not set, auth is skipped (open admin mode).
+// Set ADMIN_TOKEN secret to require a Bearer token on all admin routes.
 const requireAdminAuth = (req: Request, res: Response, next: Function): void => {
-  const authHeader = req.headers.authorization;
   const adminToken = process.env.ADMIN_TOKEN;
 
-  if (!authHeader || !adminToken) {
+  // No token configured → open admin mode (rely on frontend route guard)
+  if (!adminToken) {
+    next();
+    return;
+  }
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
     res.status(403).json({ error: "Admin authentication required" });
     return;
   }

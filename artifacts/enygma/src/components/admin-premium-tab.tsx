@@ -9,6 +9,7 @@ interface PremiumUser {
   email?: string;
   metodo_pago?: string;
   fecha_solicitud?: string;
+  timestamp_solicitud?: string;
   fecha_vencimiento?: string;
   estado_premium?: boolean;
   estado: "pendiente" | "aprobado" | "rechazado";
