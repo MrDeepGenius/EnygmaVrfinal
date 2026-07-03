@@ -12,6 +12,7 @@ export interface PremiumUser {
   metodo_pago: "transferencia" | "crypto";
   timestamp_solicitud: string;
   timestamp_aprobacion?: string;
+  fecha_vencimiento?: string;
   aprobado_por?: string;
   notas?: string;
   activo: boolean;
@@ -97,14 +98,46 @@ export async function approvePremiumRequest(
     throw new Error(`Pending premium request not found for user ${usuario}`);
   }
 
+  const now = new Date();
+  const expiry = new Date(now);
+  expiry.setDate(expiry.getDate() + 30);
+
   user.estado_premium = true;
   user.sin_publicidades = true;
-  user.timestamp_aprobacion = new Date().toISOString();
+  user.timestamp_aprobacion = now.toISOString();
+  user.fecha_vencimiento = expiry.toISOString();
   user.aprobado_por = adminUser;
   user.activo = true;
 
   await savePremiumUsers(users);
-  logger.info({ usuario, adminUser }, "Premium request approved");
+  logger.info({ usuario, adminUser, fecha_vencimiento: expiry.toISOString() }, "Premium request approved");
+  return user;
+}
+
+export async function toggleUserPremium(usuario: string, activate: boolean): Promise<PremiumUser | null> {
+  const users = await loadPremiumUsers();
+  const user = users.find((u) => u.usuario === usuario);
+
+  if (!user) return null;
+
+  if (activate) {
+    const now = new Date();
+    const expiry = new Date(now);
+    expiry.setDate(expiry.getDate() + 30);
+    user.estado_premium = true;
+    user.sin_publicidades = true;
+    user.activo = true;
+    user.timestamp_aprobacion = now.toISOString();
+    user.fecha_vencimiento = expiry.toISOString();
+  } else {
+    user.estado_premium = false;
+    user.sin_publicidades = false;
+    user.activo = false;
+    user.fecha_vencimiento = undefined;
+  }
+
+  await savePremiumUsers(users);
+  logger.info({ usuario, activate }, "Premium status toggled");
   return user;
 }
 
@@ -126,18 +159,20 @@ export async function getPremiumStatus(usuario: string) {
   const user = users.find((u) => u.usuario === usuario && u.estado_premium && u.activo);
 
   if (!user) {
-    return {
-      usuario,
-      isPremium: false,
-      sinPublicidades: false,
-    };
+    return { usuario, isPremium: false, sinPublicidades: false };
   }
 
-  return {
-    usuario,
-    isPremium: true,
-    sinPublicidades: user.sin_publicidades,
-  };
+  // Auto-downgrade if expiry has passed
+  if (user.fecha_vencimiento && new Date(user.fecha_vencimiento) < new Date()) {
+    user.estado_premium = false;
+    user.sin_publicidades = false;
+    user.activo = false;
+    await savePremiumUsers(users);
+    logger.info({ usuario }, "Premium expired — auto-downgraded to free");
+    return { usuario, isPremium: false, sinPublicidades: false };
+  }
+
+  return { usuario, isPremium: true, sinPublicidades: user.sin_publicidades };
 }
 
 export async function toggleAds(usuario: string, sinPublicidades: boolean): Promise<void> {

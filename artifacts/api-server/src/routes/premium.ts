@@ -11,6 +11,7 @@ import {
   handleRemovePremium,
   type PremiumRequestData,
 } from "../lib/premium-service";
+import { toggleUserPremium } from "../lib/premium-storage";
 
 const router = Router();
 
@@ -208,6 +209,30 @@ router.delete("/remove", requireAdminAuth, async (req: Request, res: Response): 
     const err = error as Error;
     logger.error({ err: err.message }, "Failed to remove premium");
     res.status(400).json({ error: err.message });
+  }
+});
+
+/**
+ * PUT /api/premium/toggle-premium
+ * Admin: Toggle premium status for a user (sets 30-day expiry when activating)
+ */
+router.put("/toggle-premium", requireAdminAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { usuario, activate } = req.body;
+    if (!usuario) {
+      res.status(400).json({ error: "usuario field required" });
+      return;
+    }
+    const user = await toggleUserPremium(usuario, !!activate);
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    res.json({ success: true, user });
+  } catch (error) {
+    const err = error as Error;
+    logger.error({ err: err.message }, "Failed to toggle premium");
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

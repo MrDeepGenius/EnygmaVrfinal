@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Check, Trash2, Eye, EyeOff, Loader2, X } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -9,203 +9,326 @@ interface PremiumUser {
   email?: string;
   metodo_pago?: string;
   fecha_solicitud?: string;
+  fecha_vencimiento?: string;
+  estado_premium?: boolean;
   estado: "pendiente" | "aprobado" | "rechazado";
   sinPublicidades: boolean;
 }
 
+function CyberpunkSwitch({
+  checked,
+  onChange,
+  disabled,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className="relative inline-flex items-center w-12 h-6 rounded-full transition-all duration-300 focus:outline-none disabled:opacity-50"
+      style={{
+        background: checked
+          ? "linear-gradient(90deg,#7c3aed,#a78bfa)"
+          : "rgba(255,255,255,0.1)",
+        border: checked ? "1px solid #a78bfa" : "1px solid rgba(255,255,255,0.15)",
+        boxShadow: checked ? "0 0 10px rgba(167,139,250,0.5)" : "none",
+      }}
+    >
+      <span
+        className="inline-block w-4 h-4 rounded-full transition-transform duration-300"
+        style={{
+          background: checked ? "#fff" : "#6b7280",
+          transform: checked ? "translateX(26px)" : "translateX(3px)",
+          boxShadow: checked ? "0 0 6px rgba(167,139,250,0.8)" : "none",
+        }}
+      />
+    </button>
+  );
+}
+
+function formatDate(iso?: string) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function isExpired(fecha_vencimiento?: string) {
+  if (!fecha_vencimiento) return false;
+  return new Date(fecha_vencimiento) < new Date();
+}
+
 export function AdminPremiumTab() {
-  const [premiumUsers, setPremiumUsers] = useState<PremiumUser[]>([]);
-  const [premiumLoading, setPremiumLoading] = useState(false);
+  const [users, setUsers] = useState<PremiumUser[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [toggling, setToggling] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchPremiumUsers();
+    fetchUsers();
   }, []);
 
-  const fetchPremiumUsers = async () => {
-    setPremiumLoading(true);
+  const fetchUsers = async () => {
+    setLoading(true);
     try {
       const res = await fetch(`${BASE}/api/premium/list`);
       const data = await res.json();
-      setPremiumUsers(data.users || []);
+      const all = [...(data.pending || []), ...(data.approved || []), ...(data.users || [])];
+      // dedupe by usuario
+      const seen = new Set<string>();
+      setUsers(all.filter((u: PremiumUser) => {
+        if (seen.has(u.usuario)) return false;
+        seen.add(u.usuario);
+        return true;
+      }));
     } catch (e) {
       console.error("Error fetching premium users:", e);
-      setPremiumUsers([]);
     } finally {
-      setPremiumLoading(false);
+      setLoading(false);
     }
   };
 
-  const toggleUserAds = async (usuario: string, currentState: boolean) => {
+  const handleTogglePremium = async (usuario: string, currentIsPremium: boolean) => {
+    setToggling(usuario);
     try {
-      const res = await fetch(`${BASE}/api/premium/toggle-ads`, {
+      const res = await fetch(`${BASE}/api/premium/toggle-premium`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuario, sinPublicidades: !currentState }),
+        body: JSON.stringify({ usuario, activate: !currentIsPremium }),
       });
       if (res.ok) {
-        fetchPremiumUsers();
-      } else {
-        alert("Error al actualizar el estado");
+        fetchUsers();
       }
     } catch (e) {
-      alert("Error de conexión: " + String(e));
+      console.error("Error toggling premium:", e);
+    } finally {
+      setToggling(null);
     }
   };
 
-  const approvePremiumRequest = async (usuario: string) => {
+  const handleApprove = async (usuario: string) => {
+    setToggling(usuario);
     try {
       const res = await fetch(`${BASE}/api/premium/approve`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario }),
       });
-      if (res.ok) {
-        fetchPremiumUsers();
-      } else {
-        alert("Error al aprobar la solicitud");
-      }
+      if (res.ok) fetchUsers();
     } catch (e) {
-      alert("Error de conexión: " + String(e));
+      console.error(e);
+    } finally {
+      setToggling(null);
     }
   };
 
-  const rejectPremiumRequest = async (usuario: string) => {
-    try {
-      const res = await fetch(`${BASE}/api/premium/reject`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuario }),
-      });
-      if (res.ok) {
-        fetchPremiumUsers();
-      } else {
-        alert("Error al rechazar la solicitud");
-      }
-    } catch (e) {
-      alert("Error de conexión: " + String(e));
-    }
-  };
-
-  const removePremiumUser = async (usuario: string) => {
-    if (!confirm(`¿Eliminar premium de ${usuario}?`)) return;
+  const handleRemove = async (usuario: string) => {
+    if (!confirm(`¿Quitar premium de ${usuario}?`)) return;
     try {
       const res = await fetch(`${BASE}/api/premium/remove`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario }),
       });
-      if (res.ok) {
-        fetchPremiumUsers();
-      } else {
-        alert("Error al eliminar el premium");
-      }
+      if (res.ok) fetchUsers();
     } catch (e) {
-      alert("Error de conexión: " + String(e));
+      console.error(e);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-bold mb-1">💎 Gestión de Premium</h2>
-        <p className="text-white/40 text-sm mb-4">Aprueba solicitudes de usuarios premium y gestiona sus privilegios.</p>
+    <div
+      className="space-y-6"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2
+            className="text-lg font-black tracking-widest uppercase"
+            style={{ color: "#a78bfa" }}
+          >
+            ⚡ Panel Premium
+          </h2>
+          <p className="text-xs mt-0.5" style={{ color: "#38bdf8" }}>
+            Gestioná accesos Premium · Switch activa 30 días automáticos
+          </p>
+        </div>
+        <button
+          onClick={fetchUsers}
+          className="text-xs px-3 py-1.5 rounded-lg font-bold transition-colors"
+          style={{
+            background: "rgba(167,139,250,0.1)",
+            border: "1px solid rgba(167,139,250,0.3)",
+            color: "#a78bfa",
+          }}
+        >
+          ↻ Actualizar
+        </button>
       </div>
 
-      {premiumLoading ? (
+      {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-[#7B2FBE] animate-spin" />
+          <Loader2
+            className="animate-spin"
+            style={{ color: "#a78bfa", width: 32, height: 32 }}
+          />
         </div>
-      ) : premiumUsers.length === 0 ? (
-        <div className="text-center py-12 text-white/20 text-sm border border-dashed border-white/10 rounded-xl">
-          No hay solicitudes de premium ni usuarios premium.
+      ) : users.length === 0 ? (
+        <div
+          className="text-center py-12 text-sm rounded-2xl"
+          style={{
+            color: "#6b7280",
+            border: "1px dashed rgba(167,139,250,0.2)",
+            background: "rgba(167,139,250,0.03)",
+          }}
+        >
+          No hay solicitudes ni usuarios premium.
         </div>
       ) : (
-        <div className="space-y-3">
-          {premiumUsers.map((user) => (
-            <div key={user.usuario} className="bg-white/5 border border-white/10 rounded-xl p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-white font-semibold truncate">{user.nombre}</h3>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${
-                        user.estado === "aprobado"
-                          ? "bg-green-900/50 text-green-400"
-                          : user.estado === "rechazado"
-                            ? "bg-red-900/50 text-red-400"
-                            : "bg-yellow-900/50 text-yellow-400"
-                      }`}
-                    >
-                      {user.estado === "aprobado"
-                        ? "✅ Aprobado"
-                        : user.estado === "rechazado"
-                          ? "❌ Rechazado"
-                          : "⏳ Pendiente"}
-                    </span>
-                  </div>
-                  <p className="text-white/60 text-sm">@{user.usuario}</p>
-                  {user.email && <p className="text-white/40 text-xs">{user.email}</p>}
-                  {user.metodo_pago && <p className="text-white/40 text-xs">Pago: {user.metodo_pago}</p>}
-                  {user.fecha_solicitud && (
-                    <p className="text-white/30 text-xs">Solicitado: {new Date(user.fecha_solicitud).toLocaleString("es-AR")}</p>
-                  )}
-                </div>
+        <div className="overflow-x-auto rounded-2xl" style={{ border: "1px solid rgba(167,139,250,0.2)" }}>
+          <table className="w-full text-xs">
+            <thead>
+              <tr style={{ background: "rgba(167,139,250,0.08)", borderBottom: "1px solid rgba(167,139,250,0.2)" }}>
+                {["Usuario / Email", "Nombre", "Método", "Solicitado", "Vence", "Rol", "Premium"].map((h) => (
+                  <th
+                    key={h}
+                    className="text-left px-4 py-3 font-black tracking-wider uppercase"
+                    style={{ color: "#a78bfa" }}
+                  >
+                    {h}
+                  </th>
+                ))}
+                <th className="px-4 py-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((u, i) => {
+                const isPremium = u.estado === "aprobado" || !!u.estado_premium;
+                const expired = isExpired(u.fecha_vencimiento);
+                return (
+                  <tr
+                    key={u.usuario}
+                    style={{
+                      background: i % 2 === 0 ? "rgba(0,0,0,0.3)" : "rgba(167,139,250,0.03)",
+                      borderBottom: "1px solid rgba(167,139,250,0.1)",
+                    }}
+                  >
+                    {/* Email */}
+                    <td className="px-4 py-3">
+                      <span style={{ color: "#e2e8f0" }}>{u.usuario}</span>
+                      {u.email && u.email !== u.usuario && (
+                        <div style={{ color: "#6b7280" }}>{u.email}</div>
+                      )}
+                    </td>
 
-                <div className="flex flex-col gap-2 flex-shrink-0">
-                  {user.estado === "pendiente" && (
-                    <>
-                      <button
-                        onClick={() => approvePremiumRequest(user.usuario)}
-                        className="flex items-center gap-1 bg-green-600/80 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors"
-                      >
-                        <Check className="w-3 h-3" />
-                        Aprobar
-                      </button>
-                      <button
-                        onClick={() => rejectPremiumRequest(user.usuario)}
-                        className="flex items-center gap-1 bg-red-600/80 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors"
-                      >
-                        <X className="w-3 h-3" />
-                        Rechazar
-                      </button>
-                    </>
-                  )}
+                    {/* Nombre */}
+                    <td className="px-4 py-3" style={{ color: "#c4b5fd" }}>
+                      {u.nombre || "—"}
+                    </td>
 
-                  {user.estado === "aprobado" && (
-                    <>
-                      <button
-                        onClick={() => toggleUserAds(user.usuario, user.sinPublicidades)}
-                        className={`flex items-center gap-1 text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors ${
-                          user.sinPublicidades
-                            ? "bg-[#7B2FBE]/80 hover:bg-[#7B2FBE]"
-                            : "bg-white/10 hover:bg-white/15"
-                        }`}
+                    {/* Método */}
+                    <td className="px-4 py-3">
+                      <span
+                        className="px-2 py-0.5 rounded-full text-xs font-bold"
+                        style={
+                          u.metodo_pago === "crypto"
+                            ? { background: "rgba(249,115,22,0.15)", color: "#f97316", border: "1px solid rgba(249,115,22,0.3)" }
+                            : { background: "rgba(56,189,248,0.1)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.3)" }
+                        }
                       >
-                        {user.sinPublicidades ? (
-                          <>
-                            <Eye className="w-3 h-3" />
-                            Con Ads
-                          </>
-                        ) : (
-                          <>
-                            <EyeOff className="w-3 h-3" />
-                            Sin Ads
-                          </>
-                        )}
-                      </button>
-                      <button
-                        onClick={() => removePremiumUser(user.usuario)}
-                        className="flex items-center gap-1 bg-white/10 hover:bg-red-600/20 text-white/60 hover:text-red-400 text-xs font-semibold px-3 py-1.5 rounded transition-colors"
+                        {u.metodo_pago === "crypto" ? "⛓️ Cripto" : "💳 Transfer"}
+                      </span>
+                    </td>
+
+                    {/* Fecha solicitud */}
+                    <td className="px-4 py-3" style={{ color: "#6b7280" }}>
+                      {formatDate(u.fecha_solicitud)}
+                    </td>
+
+                    {/* Fecha vencimiento */}
+                    <td className="px-4 py-3">
+                      {u.fecha_vencimiento ? (
+                        <span
+                          className="font-bold"
+                          style={{ color: expired ? "#f97316" : "#a78bfa" }}
+                        >
+                          {expired ? "⚠️ " : "✅ "}{formatDate(u.fecha_vencimiento)}
+                        </span>
+                      ) : (
+                        <span style={{ color: "#6b7280" }}>—</span>
+                      )}
+                    </td>
+
+                    {/* Rol */}
+                    <td className="px-4 py-3">
+                      <span
+                        className="px-2 py-0.5 rounded-full text-xs font-black tracking-wider uppercase"
+                        style={
+                          isPremium && !expired
+                            ? {
+                                background: "rgba(124,58,237,0.2)",
+                                color: "#a78bfa",
+                                border: "1px solid rgba(124,58,237,0.4)",
+                                boxShadow: "0 0 8px rgba(124,58,237,0.3)",
+                              }
+                            : {
+                                background: "rgba(255,255,255,0.05)",
+                                color: "#6b7280",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                              }
+                        }
                       >
-                        <Trash2 className="w-3 h-3" />
-                        Eliminar
+                        {isPremium && !expired ? "⚡ Premium" : "free"}
+                      </span>
+                    </td>
+
+                    {/* Switch */}
+                    <td className="px-4 py-3">
+                      {toggling === u.usuario ? (
+                        <Loader2 className="animate-spin w-4 h-4" style={{ color: "#a78bfa" }} />
+                      ) : u.estado === "pendiente" ? (
+                        <button
+                          onClick={() => handleApprove(u.usuario)}
+                          className="text-xs px-2 py-1 rounded font-bold transition-colors"
+                          style={{
+                            background: "rgba(167,139,250,0.15)",
+                            color: "#a78bfa",
+                            border: "1px solid rgba(167,139,250,0.4)",
+                          }}
+                        >
+                          Aprobar
+                        </button>
+                      ) : (
+                        <CyberpunkSwitch
+                          checked={isPremium && !expired}
+                          onChange={() => handleTogglePremium(u.usuario, isPremium && !expired)}
+                        />
+                      )}
+                    </td>
+
+                    {/* Delete */}
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => handleRemove(u.usuario)}
+                        className="p-1.5 rounded transition-colors hover:bg-red-500/20"
+                        style={{ color: "#6b7280" }}
+                        title="Eliminar"
+                      >
+                        <Trash2 size={13} />
                       </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

@@ -1,0 +1,34 @@
+Necesito implementar un sistema de Donaciones Semiautomático para mi aplicación de streaming "Enigma Cine". La estética del diseño debe ser estrictamente Cyberpunk / Cyber-Violet (Fondos oscuros #0b0813, textos en violeta neón #a78bfa, acentos en azul #38bdf8 y naranja #f97316).
+
+Implementa los siguientes módulos detallados e integra los datos de transferencia reales que te proveo:
+
+1. BOTÓN FLOTANTE CON OPCIÓN DE CERRAR Y MODAL EXPLICATIVO (Frontend):
+- Crea un botón flotante abajo a la derecha con un icono llamativo (por ejemplo, una corona o taza de café con brillo neón).
+- El botón debe incluir una pequeña 'X' para que el usuario pueda ocultarlo por completo durante su sesión si le molesta para ver el contenido.
+- Al presionar el botón principal, despliega un modal elegante que incluya el siguiente TEXTO EXPLICATIVO LITERAL para concientizar al usuario:
+  
+  "¡Mantengamos Enigma Cine Vivo y Libre de Anuncios! 🚀
+  Mantener los servidores activos, la aplicación online y todo el contenido actualizado a la máxima velocidad de streaming cuesta dinero todos los meses. Queremos que la plataforma siga siendo accesible para todos, pero la publicidad a veces interrumpe la experiencia. 
+  ¿Nos ayudás con una donación? Con tu aporte pagamos la infraestructura y los servidores de streaming directamente. A cambio, removemos el 100% de la publicidad de tu cuenta y te damos acceso prioritario por un mes."
+
+- Abajo de este texto, incluye el selector de pestañas o países con las tasas y datos reales:
+  * Argentina: Mínimo $2.000 ARS. Mostrar el Alias: "bmontero25" (Titular: BRIAN ALEJANDRO MONTERO) junto a un botón visual de "Copiar Alias".
+  * Internacional (Dólares/Fiat): Mínimo $2 USD. Mostrar el identificador: "enygmacine26" (Titular: BRIAN ALEJANDRO MONTERO) junto a un botón de "Copiar Datos".
+  * Internacional (Cripto): Mínimo 2 USDT por Red BEP-20 / BNB Chain. Mostrar la dirección de Wallet exacta: "0x56C4900f85fD1bb374eA378CE3babfc577F6541C" junto a un botón de "Copiar Wallet".
+
+2. FORMULARIO DE REGISTRO DE SOLICITUD:
+- Dentro del mismo modal, luego de mostrar los datos de pago, añade un formulario donde el usuario ingrese su 'Nombre' y su 'Gmail'.
+- Incluye un botón "Enviar y Notificar por WhatsApp". Al hacer clic, debe:
+  a) Registrar o actualizar al usuario en la base de datos con 'rol': 'free' y guardar el método de pago seleccionado.
+  b) Redirigir dinámicamente a un enlace de WhatsApp con el texto preestablecido: "Hola Enigma Cine! Acabo de enviar mis datos para el pase Premium de mi cuenta: [Gmail]. Adjunto el comprobante de pago."
+
+3. PANEL DE ADMINISTRADOR (INTERRUPTOR PREMIUM):
+- Diseña una sección exclusiva de administración (protegida o accesible por una ruta de admin).
+- Muestra una tabla con los usuarios, su correo, su rol actual ('free' o 'premium') y su fecha de vencimiento.
+- Cada fila debe incluir un Interruptor visual (Switch CSS estilo Cyberpunk).
+- Al activar el Switch, el sistema debe cambiar el 'rol' de ese usuario a 'premium' en la base de datos y calcular automáticamente la 'fecha_vencimiento' sumando exactamente 30 días a la fecha actual (tomando como año corriente 2026). Si se apaga, vuelve a 'free'.
+
+4. LÓGICA DE FILTRADO DE ANUNCIOS:
+- Crea una función condicional o Middleware que verifique el estado del usuario logueado. Si el usuario tiene 'rol' == 'premium' y la fecha actual es menor o igual a 'fecha_vencimiento', oculta por completo todos los componentes de publicidad de la aplicación y habilita la máxima velocidad/calidad de reproducción. Si el plazo expiró, actualiza automáticamente el rol a 'free'.
+
+Por favor, escribe el código modular, limpio, explicando dónde integrar cada sección en la estructura actual de mi proyecto.

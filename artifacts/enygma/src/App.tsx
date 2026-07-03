@@ -5,6 +5,8 @@ import { queryClient } from "@/lib/query-client";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ProfileProvider } from "@/lib/profile-context";
+import { PremiumProvider } from "@/lib/premium-context";
+import { DonacionButton } from "@/components/donacion-button";
 import { SplashScreen } from "@/components/splash-screen";
 import { TvModeProvider } from "@/lib/tv-mode";
 import { TvRemoteNavigation } from "@/components/tv-remote-navigation";
@@ -83,13 +85,16 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <TvModeProvider>
+          <PremiumProvider>
           <ProfileProvider>
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
               <TvRemoteNavigation />
               <InstallButton />
+              <DonacionButton />
               <Router />
             </WouterRouter>
           </ProfileProvider>
+          </PremiumProvider>
         </TvModeProvider>
         <Toaster />
       </TooltipProvider>

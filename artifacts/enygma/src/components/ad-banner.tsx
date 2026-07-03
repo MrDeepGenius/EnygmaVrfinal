@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { usePremium } from "@/lib/premium-context";
 
 // ── Adsterra Banner Keys ──────────────────────────────────────────────────
 const DESKTOP_KEY = "862944febd24dd376950cafd83ec2ba0"; // 728x90
@@ -37,7 +38,10 @@ function enqueueAd(init: () => void) {
 let bannerCounter = 0;
 
 export function AdBanner({ variant = "horizontal", className = "" }: AdBannerProps) {
+  const { sinPublicidades } = usePremium();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  if (sinPublicidades) return null;
   const idRef        = useRef(`adsterra-${++bannerCounter}`);
   const mounted      = useRef(false);
 
