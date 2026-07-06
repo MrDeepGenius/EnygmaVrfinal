@@ -1,8 +1,8 @@
 run = "pnpm install && pnpm run build && pnpm --filter @workspace/api-server run start"
-modules = ["nodejs-20"]
+modules = ["nodejs-20", "python-3.12", "web"]
 
 [nix]
-channel = "stable-24_05"
+channel = "stable-25_05"
 
 [unitTest]
 language = "nodejs"
