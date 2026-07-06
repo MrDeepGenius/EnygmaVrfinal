@@ -40,10 +40,20 @@ app.use("/api", router);
 // Try to serve frontend static files if they exist
 const frontendDir = path.join(__dirname, "../../enygma/dist/public");
 try {
-  app.use(express.static(frontendDir, { maxAge: "1d" }));
+  // Hashed assets (JS/CSS) can be cached long-term; index.html must NOT be cached
+  // so users always get the latest app shell after a deploy.
+  app.use(express.static(frontendDir, {
+    maxAge: "1y",
+    setHeaders(res, filePath) {
+      if (filePath.endsWith("index.html")) {
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      }
+    },
+  }));
   // SPA fallback - serve index.html for all non-API routes
   app.use((_req, res, next) => {
     const indexPath = path.join(frontendDir, "index.html");
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     res.sendFile(indexPath, (err) => {
       if (err && !res.headersSent) {
         // If index.html not found, return API server info

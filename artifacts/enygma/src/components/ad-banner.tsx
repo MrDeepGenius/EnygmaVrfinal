@@ -40,12 +40,13 @@ let bannerCounter = 0;
 export function AdBanner({ variant = "horizontal", className = "" }: AdBannerProps) {
   const { sinPublicidades } = usePremium();
   const containerRef = useRef<HTMLDivElement>(null);
-
-  if (sinPublicidades) return null;
-  const idRef        = useRef(`adsterra-${++bannerCounter}`);
-  const mounted      = useRef(false);
+  // Hooks must always be called unconditionally — keep these before any early return
+  const idRef   = useRef(`adsterra-${++bannerCounter}`);
+  const mounted = useRef(false);
 
   useEffect(() => {
+    // Don't load ads for premium users without ads
+    if (sinPublicidades) return;
     if (mounted.current) return;
     mounted.current = true;
 
@@ -53,10 +54,7 @@ export function AdBanner({ variant = "horizontal", className = "" }: AdBannerPro
     if (!container) return;
 
     enqueueAd(() => {
-      // Skip ad loading inside iframes (e.g. Replit artifact preview) —
-      // third-party ad scripts throw non-Error exceptions in sandboxed iframes.
-      const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
-      if (inIframe || !container.isConnected) { drainAdQueue(); return; }
+      if (!container.isConnected) { drainAdQueue(); return; }
 
       const isRect    = variant === "rect";
       const isDesktop = window.innerWidth >= 728;
@@ -83,7 +81,10 @@ export function AdBanner({ variant = "horizontal", className = "" }: AdBannerPro
     return () => {
       if (container) container.innerHTML = "";
     };
-  }, [variant]);
+  }, [variant, sinPublicidades]);
+
+  // Don't render anything for premium users without ads
+  if (sinPublicidades) return null;
 
   const isRect    = variant === "rect";
   const isDesktop = typeof window !== "undefined" && window.innerWidth >= 728;
