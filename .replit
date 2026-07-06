@@ -79,8 +79,3 @@ outputType = "console"
 [agent]
 expertMode = true
 stack = "BEST_EFFORT_FALLBACK"
-
-[userenv]
-
-[userenv.shared]
-TMDB_API_KEY = "b9b334be32f57187296a06cfed4f2821"
