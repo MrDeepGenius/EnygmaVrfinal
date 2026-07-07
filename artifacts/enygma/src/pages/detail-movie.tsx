@@ -344,26 +344,48 @@ export default function MovieDetail() {
 
       {/* ── TAB: SIMILAR ── */}
       {activeTab === "similar" && (
-        <div className="p-4">
+        <div className="py-4">
           {similarMovies.length > 0 ? (
-            <div className="grid grid-cols-2 gap-3">
+            <div
+              className="flex gap-3 overflow-x-auto px-4 pb-2 snap-x snap-mandatory"
+              style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+            >
               {similarMovies.map((m) => (
-                <Link key={m.id} href={`/detail/movie/${m.id}`} className="group">
-                  <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-zinc-900">
+                <Link
+                  key={m.id}
+                  href={`/detail/movie/${m.id}`}
+                  className="flex-shrink-0 snap-start"
+                  style={{ width: "calc(50% - 10px)" }}
+                >
+                  <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-zinc-900 shadow-lg">
                     {m.posterUrl ? (
-                      <img src={m.posterUrl} alt={m.titulo} className="w-full h-full object-cover" loading="lazy" />
+                      <img
+                        src={m.posterUrl}
+                        alt={m.titulo}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center p-2 text-center">
-                        <span className="text-xs text-white/30">{m.titulo}</span>
+                      <div className="w-full h-full flex items-center justify-center p-3 bg-zinc-800">
+                        <span className="text-xs text-white/40 text-center font-medium leading-tight">{m.titulo}</span>
                       </div>
                     )}
+                    {/* Gradient + title overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 right-0 p-2.5 pointer-events-none">
+                      <p className="text-white text-[12px] font-bold leading-tight line-clamp-2 drop-shadow-md">
+                        {m.titulo}
+                      </p>
+                      {m.año && (
+                        <p className="text-white/55 text-[10px] mt-0.5 font-medium">{m.año}</p>
+                      )}
+                    </div>
                   </div>
-                  <p className="text-[12px] text-white/70 mt-1.5 font-medium line-clamp-2 leading-tight">{m.titulo}</p>
                 </Link>
               ))}
             </div>
           ) : (
-            <p className="text-white/30 text-sm text-center py-8">Sin recomendaciones disponibles</p>
+            <p className="text-white/30 text-sm text-center py-8 px-4">Sin recomendaciones disponibles</p>
           )}
         </div>
       )}
