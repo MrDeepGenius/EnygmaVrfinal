@@ -11,7 +11,9 @@ import { AnimatePresence } from "framer-motion";
 import { Dices } from "lucide-react";
 import { RuletaCine } from "@/components/ruleta-cine";
 import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const ROTATION_DAYS = 4;
 const epoch = Math.floor(Date.now() / (ROTATION_DAYS * 24 * 60 * 60 * 1000));
 
@@ -57,6 +59,17 @@ export default function Home() {
   const allMovies = moviesData?.items || [];
   const allSeries = seriesData?.items || [];
   const allAnime  = animeData?.items  || [];
+
+  const { data: adminCfg } = useQuery({
+    queryKey: ["admin-config"],
+    queryFn: () => fetch(`${BASE}/api/admin/config`).then((r) => r.json()),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const customSections: Array<{ id: string; title: string; position: number; items: any[] }> = useMemo(() => {
+    const sections = adminCfg?.customSections || [];
+    return [...sections].sort((a: any, b: any) => (a.position ?? 0) - (b.position ?? 0));
+  }, [adminCfg]);
 
   const top10Anime  = useMemo(() => allAnime.slice(0, 10),  [allAnime]);
 
@@ -214,6 +227,75 @@ export default function Home() {
             shadowColor="rgba(123,47,190,0.45)"
           />
         )}
+
+        {/* ── Categorías curadas (admin customSections) ── */}
+        {customSections.flatMap((section) => {
+          if (!section.items?.length) return [];
+
+          const mapItem = (it: any) => ({
+            id: it.id,
+            titulo: it.titulo,
+            posterUrl: it.posterUrl ?? null,
+            backdropUrl: it.backdropUrl ?? null,
+            sinopsis: it.overview ?? null,
+            año: it.year ?? it.año ?? null,
+            genero: null,
+            esVip: false,
+            categoria: (it.tipo === "anime" ? "anime" : it.tipo === "serie" ? "serie" : "movie") as "movie" | "serie" | "anime",
+            urlReproduccion: null,
+            youtubeTrailer: null,
+            actores: null,
+            vistas: null,
+            enBanner: false,
+            tipo: null,
+            status: null,
+            valoracion: it.rating ?? null,
+            logoUrl: null,
+          });
+
+          // Split by type so each card gets the correct detail route
+          const movies = section.items.filter((it: any) => it.tipo === "movie" || !it.tipo);
+          const series = section.items.filter((it: any) => it.tipo === "serie");
+          const animes = section.items.filter((it: any) => it.tipo === "anime");
+
+          const rows: React.ReactElement[] = [];
+
+          if (movies.length > 0 && series.length === 0 && animes.length === 0) {
+            // Pure movie section — single row
+            rows.push(
+              <HorizontalRow key={section.id} title={section.title} items={movies.map(mapItem) as any} type="movie" variant="portrait" />
+            );
+          } else if (series.length > 0 && movies.length === 0 && animes.length === 0) {
+            // Pure series section — single row
+            rows.push(
+              <HorizontalRow key={section.id} title={section.title} items={series.map(mapItem) as any} type="serie" variant="portrait" />
+            );
+          } else if (animes.length > 0 && movies.length === 0 && series.length === 0) {
+            // Pure anime section — single row
+            rows.push(
+              <HorizontalRow key={section.id} title={section.title} items={animes.map(mapItem) as any} type="anime" variant="portrait" />
+            );
+          } else {
+            // Mixed section — render movies first, then series
+            if (movies.length > 0) {
+              rows.push(
+                <HorizontalRow key={`${section.id}-movies`} title={section.title} items={movies.map(mapItem) as any} type="movie" variant="portrait" />
+              );
+            }
+            if (series.length > 0) {
+              rows.push(
+                <HorizontalRow key={`${section.id}-series`} title={movies.length > 0 ? `${section.title} · Series` : section.title} items={series.map(mapItem) as any} type="serie" variant="portrait" />
+              );
+            }
+            if (animes.length > 0) {
+              rows.push(
+                <HorizontalRow key={`${section.id}-anime`} title={`${section.title} · Anime`} items={animes.map(mapItem) as any} type="anime" variant="portrait" />
+              );
+            }
+          }
+
+          return rows;
+        })}
 
         {/* ── Adrenalina Pura (Acción) ── */}
         {actionMovies.length > 0 && (

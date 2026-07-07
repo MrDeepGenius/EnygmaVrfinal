@@ -814,8 +814,12 @@ export async function getHomeContent(profile?: string): Promise<{
     ? (adminCfg.top10Series.items as any[]).map((item) => bannerItemToMovie(item, "serie"))
     : top10SeriesAuto;
 
+  const bannerFinal: Movie[] = adminCfg?.banner?.override && (adminCfg.banner.items as any[])?.length > 0
+    ? (adminCfg.banner.items as any[]).map((item) => bannerItemToMovie(item, item.tipo || "movie"))
+    : banner;
+
   const result = {
-    banner,
+    banner: bannerFinal,
     top10: top10Final,
     top10Series: top10SeriesFinal,
     trending: trending2,
