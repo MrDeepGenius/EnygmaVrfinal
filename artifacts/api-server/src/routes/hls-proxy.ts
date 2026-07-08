@@ -1,17 +1,68 @@
 import { Router, type IRouter } from "express";
 import { Readable } from "node:stream";
+import { spawn } from "node:child_process";
 
 const router: IRouter = Router();
 
-const PROXY_HEADERS = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-  Referer: "https://vimeos.net/",
-  Origin: "https://vimeos.net",
-  Accept: "*/*",
-  "Accept-Language": "es-AR,es;q=0.9,en;q=0.8",
-  Connection: "keep-alive",
-};
+const UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
+
+/** Map CDN subdomains to the correct embed origin for Referer/Origin headers */
+const CDN_ORIGIN_MAP: { test: RegExp; origin: string }[] = [
+  { test: /\.vimeos\.net$/i,   origin: "https://vimeos.net" },
+  { test: /\.streamwish\./i,   origin: "https://streamwish.com" },
+  { test: /\.waaw\./i,         origin: "https://waaw.tv" },
+];
+
+function proxyHeaders(targetUrl: string): Record<string, string> {
+  let origin = "https://vimeos.net";
+  try {
+    const { protocol, hostname } = new URL(targetUrl);
+    const mapped = CDN_ORIGIN_MAP.find((r) => r.test.test(hostname));
+    origin = mapped ? mapped.origin : `${protocol}//${hostname}`;
+  } catch { /* keep default */ }
+  return {
+    "User-Agent": UA,
+    Referer: `${origin}/`,
+    Origin: origin,
+    Accept: "*/*",
+    "Accept-Language": "es-AR,es;q=0.9,en;q=0.8",
+    Connection: "keep-alive",
+  };
+}
+
+/** Hosts that require curl (TLS fingerprint mismatch with Node.js fetch) */
+const CURL_HOSTS = /\.goodstream\.one$/i;
+
+/** Fetch via curl subprocess — bypasses TLS fingerprinting done by some CDNs */
+function curlFetch(url: string, timeoutMs: number): Promise<{ status: number; body: Buffer; ct: string }> {
+  return new Promise((resolve, reject) => {
+    const args = [
+      "-s", "-L",
+      "--max-time", String(Math.ceil(timeoutMs / 1000)),
+      "--write-out", "\n__STATUS__%{http_code}__CT__%{content_type}__",
+      url,
+    ];
+    const proc = spawn("curl", args);
+    const chunks: Buffer[] = [];
+    proc.stdout.on("data", (c: Buffer) => chunks.push(c));
+    proc.stderr.resume(); // discard stderr
+    proc.on("close", (code) => {
+      if (code !== 0) { reject(new Error(`curl exit ${code}`)); return; }
+      const full = Buffer.concat(chunks);
+      const tail = full.slice(-200).toString();
+      const m = tail.match(/__STATUS__(\d+)__CT__([^_]*)__/);
+      if (!m) { reject(new Error("curl: bad output")); return; }
+      const status = parseInt(m[1]);
+      const ct = m[2].split(";")[0].trim();
+      // strip the trailing meta line from body
+      const metaIdx = full.lastIndexOf(Buffer.from("\n__STATUS__"));
+      const body = metaIdx >= 0 ? full.slice(0, metaIdx) : full;
+      resolve({ status, body, ct });
+    });
+    proc.on("error", reject);
+  });
+}
 
 // Simple in-memory cache for .m3u8 manifests (short TTL) and TS segments (long TTL)
 interface CacheEntry { body: Buffer; ct: string; ts: number; }
@@ -101,31 +152,50 @@ router.get("/hls-proxy", async (req, res): Promise<void> => {
     return;
   }
 
-  // Timeout: 12 s for segments, 8 s for manifests
   const timeoutMs = isM3u8 ? 8_000 : 12_000;
-  const abort = new AbortController();
-  const timeoutId = setTimeout(() => abort.abort(), timeoutMs);
+  const useCurl = CURL_HOSTS.test(targetUrl.hostname);
+
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
 
   try {
+    // ── curl path (GoodStream CDN — TLS fingerprint sensitive) ──────────────
+    if (useCurl) {
+      const { status, body, ct } = await curlFetch(targetUrl.toString(), timeoutMs);
+      if (status !== 200) { res.status(status).send(`Upstream error: ${status}`); return; }
+      const isActuallyM3u8 = ct.includes("mpegurl") || ct.includes("m3u8") || isM3u8;
+      if (isActuallyM3u8) {
+        const rewritten = rewriteM3u8(body.toString("utf-8"), url);
+        const buf = Buffer.from(rewritten, "utf-8");
+        cachePut(url, buf, "application/vnd.apple.mpegurl");
+        res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
+        res.setHeader("Cache-Control", "no-cache");
+        res.send(buf);
+      } else {
+        const finalCt = ct || "application/octet-stream";
+        if (body.length < 4 * 1024 * 1024) cachePut(url, body, finalCt);
+        res.setHeader("Content-Type", finalCt);
+        res.setHeader("Cache-Control", "public, max-age=300");
+        res.send(body);
+      }
+      return;
+    }
+
+    // ── fetch path (vimeos.net, streamwish, etc.) ───────────────────────────
+    const abort = new AbortController();
+    const timeoutId = setTimeout(() => abort.abort(), timeoutMs);
     const upstream = await fetch(targetUrl.toString(), {
-      headers: PROXY_HEADERS,
+      headers: proxyHeaders(targetUrl.toString()),
       signal: abort.signal,
     });
     clearTimeout(timeoutId);
 
-    if (!upstream.ok) {
-      res.status(upstream.status).send(`Upstream error: ${upstream.status}`);
-      return;
-    }
+    if (!upstream.ok) { res.status(upstream.status).send(`Upstream error: ${upstream.status}`); return; }
 
     const ct = upstream.headers.get("content-type") || "";
     const isActuallyM3u8 = ct.includes("mpegurl") || ct.includes("m3u8") || isM3u8;
 
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-
     if (isActuallyM3u8) {
-      // Manifests: rewrite URLs, cache briefly
       const text = await upstream.text();
       const rewritten = rewriteM3u8(text, url);
       const buf = Buffer.from(rewritten, "utf-8");
@@ -134,32 +204,21 @@ router.get("/hls-proxy", async (req, res): Promise<void> => {
       res.setHeader("Cache-Control", "no-cache");
       res.send(buf);
     } else {
-      // TS segments / key files: stream directly to client for lowest latency
       const finalCt = ct || "application/octet-stream";
       const len = upstream.headers.get("content-length");
-
       res.setHeader("Content-Type", finalCt);
       res.setHeader("Cache-Control", "public, max-age=300");
       if (len) res.setHeader("Content-Length", len);
-
       if (upstream.body) {
-        // Collect for cache while streaming
         const chunks: Buffer[] = [];
         const nodeStream = Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]);
-        nodeStream.on("data", (chunk: Buffer) => {
-          chunks.push(chunk);
-          res.write(chunk);
-        });
+        nodeStream.on("data", (chunk: Buffer) => { chunks.push(chunk); res.write(chunk); });
         nodeStream.on("end", () => {
           const full = Buffer.concat(chunks);
-          // Only cache reasonably sized segments (< 4 MB)
           if (full.length < 4 * 1024 * 1024) cachePut(url, full, finalCt);
           res.end();
         });
-        nodeStream.on("error", () => {
-          if (!res.headersSent) res.status(502).send("Stream error");
-          else res.end();
-        });
+        nodeStream.on("error", () => { if (!res.headersSent) res.status(502).send("Stream error"); else res.end(); });
       } else {
         const buf = Buffer.from(await upstream.arrayBuffer());
         if (buf.length < 4 * 1024 * 1024) cachePut(url, buf, finalCt);
@@ -167,15 +226,10 @@ router.get("/hls-proxy", async (req, res): Promise<void> => {
       }
     }
   } catch (err: unknown) {
-    clearTimeout(timeoutId);
     const isAbort = err instanceof Error && err.name === "AbortError";
     if (!res.headersSent) {
-      if (isAbort) {
-        res.status(504).send("Upstream timeout");
-      } else {
-        req.log?.error?.({ err, url }, "hls-proxy error");
-        res.status(502).send("Proxy fetch failed");
-      }
+      if (isAbort) res.status(504).send("Upstream timeout");
+      else { req.log?.error?.({ err, url }, "hls-proxy error"); res.status(502).send("Proxy fetch failed"); }
     }
   }
 });

@@ -126,7 +126,7 @@ function toEmbedUrl(url: string): string {
   return url;
 }
 
-// Sites we can extract HLS from
+// Sites we can extract HLS from via server-side proxy
 function canExtract(url: string): boolean {
   if (!url) return false;
   try {

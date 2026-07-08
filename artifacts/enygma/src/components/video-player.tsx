@@ -219,27 +219,40 @@ export function VideoPlayer({ hlsUrl, castUrl, tracks, title, logoUrl, onBack, e
 
     if (Hls.isSupported()) {
       const hls = new Hls({
-        startLevel: -1,
+        // ── Startup ───────────────────────────────────────────────
+        startLevel: -1,           // ABR elige la mejor calidad disponible
         autoStartLoad: true,
         enableWorker: true,
-        startFragPrefetch: true,
-        maxBufferLength: 20,
-        maxMaxBufferLength: 60,
-        maxBufferSize: 60 * 1000 * 1000,
-        backBufferLength: 30,
-        maxBufferHole: 1,
-        highBufferWatchdogPeriod: 2,
-        fragLoadingMaxRetry: 8,
-        fragLoadingRetryDelay: 500,
-        fragLoadingMaxRetryTimeout: 8000,
-        manifestLoadingMaxRetry: 5,
-        manifestLoadingRetryDelay: 500,
-        levelLoadingMaxRetry: 6,
-        levelLoadingRetryDelay: 500,
+        startFragPrefetch: true,  // Pre-fetch el 1er segmento antes de adjuntar media
+
+        // ── Buffer grande = sin cortes ─────────────────────────────
+        // Bufferiza 60 s por delante; corta solo si hay problemas de red reales
+        maxBufferLength: 60,
+        maxMaxBufferLength: 180,
+        maxBufferSize: 120 * 1000 * 1000,  // 120 MB
+        backBufferLength: 30,               // Mantiene 30 s atrás para seek rápido
+        maxBufferHole: 0.5,
+
+        // ── ABR: sube rápido, baja con cuidado ─────────────────────
+        // abrEwmaFast bajo = reacciona rápido a mejora de banda
+        // abrEwmaSlow alto = no baja calidad por un spike momentáneo
         abrEwmaFastLive: 3,
-        abrEwmaSlowLive: 9,
-        abrBandWidthFactor: 0.8,
-        abrBandWidthUpFactor: 0.7,
+        abrEwmaSlowLive: 15,
+        abrEwmaFastVoD: 3,
+        abrEwmaSlowVoD: 15,
+        abrBandWidthFactor: 0.95,     // Usa el 95% del ancho estimado → prefiere calidad alta
+        abrBandWidthUpFactor: 0.85,   // Sube calidad con un poco más de margen
+
+        // ── Recuperación de errores agresiva ──────────────────────
+        highBufferWatchdogPeriod: 3,
+        nudgeMaxRetry: 5,
+        fragLoadingMaxRetry: 10,
+        fragLoadingRetryDelay: 200,
+        fragLoadingMaxRetryTimeout: 5000,
+        manifestLoadingMaxRetry: 6,
+        manifestLoadingRetryDelay: 300,
+        levelLoadingMaxRetry: 8,
+        levelLoadingRetryDelay: 200,
       });
       hlsRef.current = hls;
       hls.loadSource(hlsUrl);
