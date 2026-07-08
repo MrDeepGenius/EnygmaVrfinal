@@ -266,9 +266,9 @@ export default function Watch() {
 
   const shouldResolve = canExtract(rawUrl);
 
-  const { data: resolved, isLoading: resolving, isError: resolveFailed } = useResolveVideo(
+  const { data: resolved, isLoading: resolving, isError: resolveFailed, refetch: retryResolve } = useResolveVideo(
     { url: rawUrl },
-    { query: { enabled: shouldResolve && !!rawUrl, queryKey: getResolveVideoQueryKey({ url: rawUrl }), staleTime: Infinity, refetchInterval: false } }
+    { query: { enabled: shouldResolve && !!rawUrl, queryKey: getResolveVideoQueryKey({ url: rawUrl }), staleTime: 20 * 60 * 1000, refetchInterval: false, retry: 1 } }
   );
 
   const episodes = category === "serie" ? series?.episodes : category === "anime" ? anime?.episodes : null;
@@ -324,10 +324,15 @@ export default function Watch() {
         <div className="fixed inset-0 bg-black flex flex-col items-center justify-center gap-4 z-[200] text-center px-8">
           <AlertCircle className="w-16 h-16 text-[#7B2FBE]" />
           <h2 className="text-white text-2xl font-bold">Contenido no disponible</h2>
-          <p className="text-white/50">No se pudo cargar este video. Intenta más tarde.</p>
-          <button onClick={goBack} className="mt-2 px-6 py-2 bg-[#7B2FBE] text-white rounded font-bold">
-            Volver
-          </button>
+          <p className="text-white/50">No se pudo cargar este video.</p>
+          <div className="flex gap-3 mt-2">
+            <button onClick={() => retryResolve()} className="px-6 py-2 bg-[#7B2FBE] text-white rounded font-bold">
+              Reintentar
+            </button>
+            <button onClick={goBack} className="px-6 py-2 bg-white/10 text-white rounded font-bold">
+              Volver
+            </button>
+          </div>
         </div>
       );
     }
