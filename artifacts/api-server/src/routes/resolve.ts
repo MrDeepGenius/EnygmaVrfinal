@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { curlFetch, CURL_HOSTS } from "../utils/curl-fetch.js";
 
 const router: IRouter = Router();
 
@@ -128,31 +129,42 @@ router.get("/resolve", async (req, res): Promise<void> => {
   const timeoutId = setTimeout(() => abort.abort(), 10_000);
 
   try {
-    // Use the origin of the embed URL as referer so sites don't block the request
-    let referer = "https://vimeos.net/";
-    try {
-      const u = new URL(url);
-      referer = `${u.protocol}//${u.hostname}/`;
-    } catch { /* keep default */ }
+    let html: string;
 
-    const response = await fetch(url, {
-      signal: abort.signal,
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        Referer: referer,
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "es-AR,es;q=0.9,en;q=0.8",
-      },
-    });
-    clearTimeout(timeoutId);
+    if (CURL_HOSTS.test(new URL(url).hostname)) {
+      // GoodStream: use curl so the TLS/UA fingerprint matches the HLS proxy
+      clearTimeout(timeoutId);
+      const { status, body } = await curlFetch(url, 10_000);
+      if (status !== 200) {
+        res.status(404).json({ error: "Embed page not reachable" });
+        return;
+      }
+      html = body.toString("utf-8");
+    } else {
+      let referer = "https://vimeos.net/";
+      try {
+        const u = new URL(url);
+        referer = `${u.protocol}//${u.hostname}/`;
+      } catch { /* keep default */ }
 
-    if (!response.ok) {
-      res.status(404).json({ error: "Embed page not reachable" });
-      return;
+      const response = await fetch(url, {
+        signal: abort.signal,
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+          Referer: referer,
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "es-AR,es;q=0.9,en;q=0.8",
+        },
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        res.status(404).json({ error: "Embed page not reachable" });
+        return;
+      }
+      html = await response.text();
     }
-
-    const html = await response.text();
     const result = extractHlsFromHtml(html);
 
     if (!result) {

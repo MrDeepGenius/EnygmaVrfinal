@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { Readable } from "node:stream";
-import { spawn } from "node:child_process";
+import { curlFetch, CURL_HOSTS } from "../utils/curl-fetch.js";
 
 const router: IRouter = Router();
 
@@ -29,39 +29,6 @@ function proxyHeaders(targetUrl: string): Record<string, string> {
     "Accept-Language": "es-AR,es;q=0.9,en;q=0.8",
     Connection: "keep-alive",
   };
-}
-
-/** Hosts that require curl (TLS fingerprint mismatch with Node.js fetch) */
-const CURL_HOSTS = /\.goodstream\.one$/i;
-
-/** Fetch via curl subprocess — bypasses TLS fingerprinting done by some CDNs */
-function curlFetch(url: string, timeoutMs: number): Promise<{ status: number; body: Buffer; ct: string }> {
-  return new Promise((resolve, reject) => {
-    const args = [
-      "-s", "-L",
-      "--max-time", String(Math.ceil(timeoutMs / 1000)),
-      "--write-out", "\n__STATUS__%{http_code}__CT__%{content_type}__",
-      url,
-    ];
-    const proc = spawn("curl", args);
-    const chunks: Buffer[] = [];
-    proc.stdout.on("data", (c: Buffer) => chunks.push(c));
-    proc.stderr.resume(); // discard stderr
-    proc.on("close", (code) => {
-      if (code !== 0) { reject(new Error(`curl exit ${code}`)); return; }
-      const full = Buffer.concat(chunks);
-      const tail = full.slice(-200).toString();
-      const m = tail.match(/__STATUS__(\d+)__CT__([^_]*)__/);
-      if (!m) { reject(new Error("curl: bad output")); return; }
-      const status = parseInt(m[1]);
-      const ct = m[2].split(";")[0].trim();
-      // strip the trailing meta line from body
-      const metaIdx = full.lastIndexOf(Buffer.from("\n__STATUS__"));
-      const body = metaIdx >= 0 ? full.slice(0, metaIdx) : full;
-      resolve({ status, body, ct });
-    });
-    proc.on("error", reject);
-  });
 }
 
 // Simple in-memory cache for .m3u8 manifests (short TTL) and TS segments (long TTL)
