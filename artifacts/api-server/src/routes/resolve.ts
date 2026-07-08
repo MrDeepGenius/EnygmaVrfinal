@@ -38,7 +38,21 @@ function decodePacker(p: string, a: number, c: number, k: string[]): string {
   return p;
 }
 
-function extractHlsFromHtml(html: string): {
+function extractTracksAndSetDefault(
+  tracks: { file: string; label: string; kind: string; default?: boolean }[]
+): void {
+  const spIdx = tracks.findIndex(
+    (t) =>
+      t.label.toLowerCase().includes("español") ||
+      t.label.toLowerCase().includes("spanish") ||
+      t.label.toLowerCase().includes("spa")
+  );
+  if (spIdx >= 0) tracks[spIdx].default = true;
+  else if (tracks.length > 0) tracks[0].default = true;
+}
+
+/** Strategy 1: packed eval(function(p,a,c,k,e,d) obfuscation (vimeos.net, streamwish, waaw) */
+function extractHlsFromPacked(html: string): {
   hlsUrl: string;
   tracks: { file: string; label: string; kind: string; default?: boolean }[];
 } | null {
@@ -68,16 +82,30 @@ function extractHlsFromHtml(html: string): {
     tracks.push({ file: m[1], label: m[2], kind: m[3] });
   }
 
-  const spIdx = tracks.findIndex(
-    (t) =>
-      t.label.toLowerCase().includes("español") ||
-      t.label.toLowerCase().includes("spanish") ||
-      t.label.toLowerCase().includes("spa")
-  );
-  if (spIdx >= 0) tracks[spIdx].default = true;
-  else if (tracks.length > 0) tracks[0].default = true;
-
+  extractTracksAndSetDefault(tracks);
   return { hlsUrl, tracks };
+}
+
+/** Strategy 2: plain sources array — goodstream.one and similar sites that expose HLS directly */
+function extractHlsFromSources(html: string): {
+  hlsUrl: string;
+  tracks: { file: string; label: string; kind: string; default?: boolean }[];
+} | null {
+  // Matches: "https://...master.m3u8..." or file:"https://...m3u8..."
+  const m3u8Match = html.match(/["'](https?:\/\/[^"'\s]+\.m3u8[^"'\s]*)/);
+  if (!m3u8Match) return null;
+
+  const hlsUrl = m3u8Match[1];
+  const tracks: { file: string; label: string; kind: string; default?: boolean }[] = [];
+  extractTracksAndSetDefault(tracks);
+  return { hlsUrl, tracks };
+}
+
+function extractHlsFromHtml(html: string): {
+  hlsUrl: string;
+  tracks: { file: string; label: string; kind: string; default?: boolean }[];
+} | null {
+  return extractHlsFromPacked(html) ?? extractHlsFromSources(html);
 }
 
 router.get("/resolve", async (req, res): Promise<void> => {
@@ -100,12 +128,19 @@ router.get("/resolve", async (req, res): Promise<void> => {
   const timeoutId = setTimeout(() => abort.abort(), 10_000);
 
   try {
+    // Use the origin of the embed URL as referer so sites don't block the request
+    let referer = "https://vimeos.net/";
+    try {
+      const u = new URL(url);
+      referer = `${u.protocol}//${u.hostname}/`;
+    } catch { /* keep default */ }
+
     const response = await fetch(url, {
       signal: abort.signal,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        Referer: "https://vimeos.net/",
+        Referer: referer,
         Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "es-AR,es;q=0.9,en;q=0.8",
       },
