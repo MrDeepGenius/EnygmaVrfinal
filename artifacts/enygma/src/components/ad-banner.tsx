@@ -54,10 +54,10 @@ export function AdBanner({ variant = "horizontal", className = "" }: AdBannerPro
     if (!container) return;
 
     enqueueAd(() => {
-      // Skip ad loading inside sandboxed iframes (e.g. Replit preview) —
-      // third-party ad scripts throw non-Error exceptions in that context.
-      const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
-      if (inIframe || !container.isConnected) { drainAdQueue(); return; }
+      // Solo saltar en Replit preview/dev — nunca bloquear en producción
+      const host = window.location.hostname;
+      const isDevEnv = host.includes("replit.dev") || host.includes("kirk.replit") || host === "localhost" || host === "127.0.0.1";
+      if (isDevEnv || !container.isConnected) { drainAdQueue(); return; }
 
       const isRect    = variant === "rect";
       const isDesktop = window.innerWidth >= 728;
