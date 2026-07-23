@@ -717,12 +717,11 @@ export async function getHomeContent(profile?: string): Promise<{
 
   // Banner: orden exacto por ID y tipo (movie o serie)
   const PINNED_BANNER: Array<{ id: string; type: "movie" | "serie" | "anime" }> = [
-    { id: "1413976", type: "movie" }, // Citizen Vigilante
-    { id: "278178",  type: "serie" }, // Te encontraré
-    { id: "1084244", type: "movie" }, // Toy Story 5
-    { id: "1339713", type: "movie" }, // Obsesión
-    { id: "220102",  type: "serie" }, // Spider-Noir (2026)
-    { id: "1273221", type: "movie" }, // (nuevo)
+    { id: "1108427", type: "movie" }, // Vaina
+    { id: "1375646", type: "movie" }, // Colony
+    { id: "1266127", type: "movie" }, // Noche de bodas
+    { id: "1368337", type: "movie" }, // La odisea
+    { id: "1656220", type: "movie" }, // 23.000
   ];
 
   const pinnedBanner: Movie[] = [];

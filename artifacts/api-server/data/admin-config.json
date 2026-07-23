@@ -3,58 +3,44 @@
     "override": true,
     "items": [
       {
-        "id": "936075",
-        "titulo": "Michael",
+        "id": "1108427",
+        "titulo": "Vaiana",
         "tipo": "movie",
-        "posterUrl": "https://image.tmdb.org/t/p/w500/2uK36ujoDXOfNiJ5Yp3raVprB51.jpg",
-        "backdropUrl": "https://image.tmdb.org/t/p/original/ufSwlnECLoUbBjPrFqEQcWBzHwc.jpg",
-        "year": "2026",
-        "rating": 8.706
+        "posterUrl": "https://image.tmdb.org/t/p/w500/wC27PIEqSthbUhaVMdYEhaTzYmo.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/c6U1Te0p0FK0BOB43hiwGlBKiVY.jpg",
+        "year": "2026"
       },
       {
-        "id": "687163",
-        "titulo": "Proyecto Salvación",
+        "id": "1375646",
+        "titulo": "Colony",
         "tipo": "movie",
-        "posterUrl": "https://image.tmdb.org/t/p/w500/7lwOTxajURKEWO6gI370NTrVdBO.jpg",
-        "backdropUrl": "https://image.tmdb.org/t/p/original/8Tfys3mDZVp4tNoH2ktm06a0Tau.jpg",
-        "year": "2026",
-        "rating": 8.677
+        "posterUrl": "https://image.tmdb.org/t/p/w500/lkqrY8lioj8jwAXFnx6c5tc5Gv3.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/jDvxsBemt2Iyslg7qn2WMzgxz23.jpg",
+        "year": "2026"
       },
       {
-        "id": "94997",
-        "titulo": "La casa del dragón",
-        "tipo": "serie",
-        "posterUrl": "https://image.tmdb.org/t/p/w500/8MaxftF69sEAAD5673vTjIl8yT3.jpg",
-        "backdropUrl": "https://image.tmdb.org/t/p/original/577eXC8wFQT0eUrJcgznSiFPRmk.jpg",
-        "year": "2022",
-        "rating": 8.363
-      },
-      {
-        "id": "1339713",
-        "titulo": "Obsesión",
+        "id": "1266127",
+        "titulo": "Noche de bodas 2",
         "tipo": "movie",
-        "posterUrl": "https://image.tmdb.org/t/p/w500/ohi9xvbBUymM4SuIOSlt1xbLRQQ.jpg",
-        "backdropUrl": "https://image.tmdb.org/t/p/original/rZfmzpixLKLR3Hg2u0WgC7XLFl8.jpg",
-        "year": "2026",
-        "rating": 8.261
+        "posterUrl": "https://image.tmdb.org/t/p/w500/nDXKMOLJuBUKhYmHAY9qJdikuAq.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/9dMp9t0d0nIGhiil8TyqChwiNwA.jpg",
+        "year": "2026"
       },
       {
-        "id": "533535",
-        "titulo": "Deadpool y Lobezno",
+        "id": "1368337",
+        "titulo": "La Odisea",
         "tipo": "movie",
-        "posterUrl": "https://image.tmdb.org/t/p/w500/9TFSqghEHrlBMRR63yTx80Orxva.jpg",
-        "backdropUrl": "https://image.tmdb.org/t/p/original/ufpeVEM64uZHPpzzeiDNIAdaeOD.jpg",
-        "year": "2024",
-        "rating": 7.8
+        "posterUrl": "https://image.tmdb.org/t/p/w500/4o2Swffv5PeMQwEm3Tu1YZvr6xT.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/r57L2UBLPKcHdZQYg8tagv9XqK2.jpg",
+        "year": "2026"
       },
       {
-        "id": "76479",
-        "titulo": "The Boys",
-        "tipo": "serie",
-        "posterUrl": "https://image.tmdb.org/t/p/w500/5kgY14oisiHcJ4zq0Xgq1e97PHm.jpg",
-        "backdropUrl": "https://image.tmdb.org/t/p/original/n6vVs6z8obNbExdD3QHTr4Utu1Z.jpg",
-        "year": "2019",
-        "rating": 8.446
+        "id": "1656220",
+        "titulo": "23.000 vidas",
+        "tipo": "movie",
+        "posterUrl": "https://image.tmdb.org/t/p/w500/8ZPoxkREjC92rGIOm2jwWMugl3g.jpg",
+        "backdropUrl": "https://image.tmdb.org/t/p/original/q5L3aXchoCgwbZbwWl5FjhGmuYs.jpg",
+        "year": "2026"
       }
     ]
   },
