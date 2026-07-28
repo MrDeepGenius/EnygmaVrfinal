@@ -6,7 +6,6 @@ import { useProfile } from "@/lib/profile-context";
 import { useFavorites } from "@/lib/use-favorites";
 import { Button } from "@/components/ui/button";
 import { useInstallPrompt } from "@/lib/use-install-prompt";
-import { RequestBubble } from "@/components/request-bubble";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [scrolled, setScrolled] = useState(false);
@@ -188,7 +187,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Request bubble — hidden on admin/profile pages */}
       {!isProfilePage && location !== "/admin" && (
-        <RequestBubble />
       )}
 
       {/* Mobile Bottom Navigation */}
