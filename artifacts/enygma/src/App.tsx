@@ -11,6 +11,7 @@ import { SplashScreen } from "@/components/splash-screen";
 import { TvModeProvider } from "@/lib/tv-mode";
 import { TvRemoteNavigation } from "@/components/tv-remote-navigation";
 import { InstallButton } from "@/components/install-button";
+import { NotificacionInicio } from "@/components/notificacion-inicio";
 import { useScrollToTop } from "@/hooks/use-scroll-to-top";
 
 const Profiles = lazy(() => import("@/pages/profiles"));
@@ -91,6 +92,7 @@ function App() {
               <TvRemoteNavigation />
               <InstallButton />
               <DonacionButton />
+              <NotificacionInicio />
               <Router />
             </WouterRouter>
           </ProfileProvider>
