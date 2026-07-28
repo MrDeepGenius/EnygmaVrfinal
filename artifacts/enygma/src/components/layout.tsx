@@ -185,10 +185,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      {/* Request bubble — hidden on admin/profile pages */}
-      {!isProfilePage && location !== "/admin" && (
-      )}
-
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 safe-area-inset-bottom">
         {/* Glassmorphism background */}
