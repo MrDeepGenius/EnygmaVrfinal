@@ -4,35 +4,28 @@ import { usePremium } from "@/lib/premium-context";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-type Tab = "ar" | "usd" | "crypto";
+type Tab = "ar" | "crypto";
 
 const PAYMENT_DATA = {
   ar: {
-    label: "🇦🇷 Argentina",
-    min: "Mínimo $2.000 ARS",
+    label: "🇦🇷 Argentina (ARS)",
+    min: "$4.000 ARS = 1 mes sin anuncios",
     field: "Alias CBU/CVU",
-    value: "bmontero25",
-    titular: "BRIAN ALEJANDRO MONTERO",
+    value: "Bmontero26",
+    titular: "MONTERO BRIAN",
     copyLabel: "Copiar Alias",
     metodo: "transferencia" as const,
-  },
-  usd: {
-    label: "🌎 Internacional (USD)",
-    min: "Mínimo $2 USD",
-    field: "Usuario PayPal / Revolut",
-    value: "enygmacine26",
-    titular: "BRIAN ALEJANDRO MONTERO",
-    copyLabel: "Copiar Datos",
-    metodo: "transferencia" as const,
+    extra: "Cada $4.000 ARS = 1 mes sin publicidad (ej: $8.000 = 2 meses)",
   },
   crypto: {
-    label: "⛓️ Cripto (USDT)",
-    min: "Mínimo 2 USDT — Red BEP-20 / BNB Chain",
-    field: "Wallet Address",
-    value: "0x56C4900f85fD1bb374eA378CE3babfc577F6541C",
+    label: "⛓️ Cripto (USDT BEP-20)",
+    min: "3 USDT = 1 mes sin anuncios",
+    field: "Wallet BEP-20 / BNB Chain",
+    value: "0x5c77b34c16bae2ccb21695564c2fe68ec99f771f",
     titular: "BEP-20 / BNB Chain",
     copyLabel: "Copiar Wallet",
     metodo: "crypto" as const,
+    extra: "Cada 3 USDT = 1 mes sin publicidad (ej: 6 USDT = 2 meses)",
   },
 };
 
@@ -204,7 +197,7 @@ export function DonacionButton() {
                         : { color: "#6b7280", border: "1px solid transparent" }
                     }
                   >
-                    {t === "ar" ? "🇦🇷 ARS" : t === "usd" ? "💵 USD" : "⛓️ Cripto"}
+                    {t === "ar" ? "🇦🇷 ARS" : "⛓️ Cripto"}
                   </button>
                 ))}
               </div>
@@ -223,6 +216,7 @@ export function DonacionButton() {
                   <p className="text-xs" style={{ color: "#6b7280" }}>Titular: {pd.titular}</p>
                 </div>
                 <CopyButton text={pd.value} label={pd.copyLabel} />
+                <p className="text-xs italic" style={{ color: "#a78bfa" }}>{pd.extra}</p>
               </div>
 
               {/* Divisor */}

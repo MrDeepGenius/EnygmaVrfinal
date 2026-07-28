@@ -1,6 +1,6 @@
 import { useRoute, Link, useLocation } from "wouter";
 import {
-  Play, Plus, Check, Film, ChevronLeft,
+  Play, Film, ChevronLeft,
 } from "lucide-react";
 import { RatingButton } from "@/components/rating-button";
 import { useGetMovie, getGetMovieQueryKey, useGetTmdbDetails, getGetTmdbDetailsQueryKey, useListMovies } from "@workspace/api-client-react";
@@ -249,21 +249,6 @@ export default function MovieDetail() {
 
         {/* Icon actions row */}
         <div className="flex items-start justify-around pt-2">
-          <button
-            onClick={() => toggle({
-              id: movie.id, titulo: movie.titulo, tipo: "movie",
-              posterUrl: movie.posterUrl ?? null, backdropUrl: movie.backdropUrl ?? null,
-              año: movie.año ?? "", categoria: "movie",
-            })}
-            className="flex flex-col items-center gap-1.5"
-          >
-            {favorited
-              ? <Check className="w-6 h-6 text-white" />
-              : <Plus className="w-6 h-6 text-white" />
-            }
-            <span className="text-[11px] text-white/55">{favorited ? "En mi lista" : "Mi lista"}</span>
-          </button>
-
           <RatingButton id={movie.id} />
 
           {trailerVideo ? (
